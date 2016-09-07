@@ -4,14 +4,15 @@
 
 This step is similar to creating EC2 instances for any other type of purpose.
 
-Note: choose **ubuntu** instead of amazon linux distribution.
-The amazon linux distribution has problems with docker 1.12, the version that has built in support for docker swarm. And it also lacks support for aufs, which is recommended by docker.
+**Note**: choose **ubuntu** instead of amazon linux distribution.
+The amazon linux distribution has problems with docker 1.12, the version that has built in support for docker swarm. 1.12 is not available in amazon linux RPM yet.
+And it also lacks support for aufs, which is recommended by docker.
 
 ### Make sure to open port 2376, this is the default port that docker-machine uses to provision.
 
 ## 2. Add ssh public key to the  newly created EC2 instances
 
-In order to access the EC2 instances, the public key of *the machine from which the provisioning will happen* need to be added to the target machine.
+In order to access the EC2 instances, the public key of **the machine from which the provisioning will happen** need to be added to the target machine.
 
 ## 3. Provision **all** EC2 instances
 
@@ -19,11 +20,11 @@ With this command:
 
 `docker-machine create --driver generic --generic-ip-address=*.*.*.* --generic-ssh-key ~/.ssh/id_rsa --generic-ssh-user ubuntu name1`
 
-Note: the --driver flag has support for AWS. But the intention to explicitly **_not_** use it is to make sure this provision guide could apply to any host machine, not just AWS hosted machines.
+**Note**: the --driver flag has support for AWS. But the intention to explicitly **_not_** use it is to make sure this provision guide could apply to any host machine, not just AWS hosted machines.
 
-The --generic-ip-address flag needs to be followed by the ip the ec2 instance ip.
+The --generic-ip-address flag needs to be followed by the ip of ec2 instance.
 
-The --generic-ssh-key flag needs to be followed by your private key, whose public key pair should have already been added in step 2.
+The --generic-ssh-key flag needs to be followed private key, whose public key pair should have already been added in step 2.
 
 The --generic-ssh-user flag needs to be followed by the user name, in the case of Ubuntu EC2 instances, the default user name is ubuntu.
 
@@ -51,7 +52,7 @@ In order for Jenkins to continuously deploy to the swarm, it needs access to the
 
 In step 3, when the swarm manager EC2 instance was being provisioned. The docker-machine created some certificate files behind the scene.
 
-Those files should be generate under:
+Those files should be in the machine that the provision command was issued(not the machine that was being provisioned), under:
 
 `[User Home Dir]/.docker/machine/machines/[name of the swarm manager]`
 
