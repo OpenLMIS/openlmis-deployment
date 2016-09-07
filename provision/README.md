@@ -61,7 +61,9 @@ Those files need to be copied to jenkins(if the provision was done on Jenkins, t
 In a Jenkins deployment job, **at the start of its build script**, add:
 
 `export DOCKER_TLS_VERIFY="1"`
+
 `export DOCKER_HOST="tcp://[ip of the swarm manager]"`
+
 `export DOCKER_CERT_PATH="[path to the dir that contains certs]"`
 
 This will make following docker commands use the remote daemon, not the local one.
