@@ -8,11 +8,13 @@ This step is similar to creating EC2 instances for any other type of purpose.
 The amazon linux distribution has problems with docker 1.12, the version that has built in support for docker swarm. 1.12 is not available in amazon linux RPM yet.
 And it also lacks support for aufs, which is recommended by docker.
 
-### Make sure to open port 2376, this is the default port that docker-machine uses to provision.
+**Make sure to open port 2376, this is the default port that docker-machine uses to provision. And make sure they have auto assigned public ip(not elastic ip) so you can ssh into them.**
 
 ## 2. Add ssh public key to the  newly created EC2 instances
 
 In order to access the EC2 instances, the public key of **the machine from which the provisioning will happen** need to be added to the target machine.
+
+This is by ssh into the EC2 instances, and then edit `[User Home Dir]/.ssh/authorized_keys` file to add your public key into it.
 
 ## 3. Provision **all** EC2 instances
 
