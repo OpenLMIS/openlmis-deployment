@@ -11,15 +11,15 @@ The amazon linux distribution has problems with docker 1.12, the version that ha
 
 ## 2. Add ssh public key to the  newly created EC2 instances
 
-In order to access the EC2 instances, the public key of the machine from which the provisioning will happen need to be added to the target machine.
+In order to access the EC2 instances, the public key of *the machine from which the provisioning will happen* need to be added to the target machine.
 
 ## 3. Provision **all** EC2 instances
 
 With this command:
 
-`docker-machine create --driver generic --generic-ip-address=*.*.*.* --generic-ssh-key ~/.ssh/id_rsa --generic-ssh-user ubuntu whatever_name`
+`docker-machine create --driver generic --generic-ip-address=*.*.*.* --generic-ssh-key ~/.ssh/id_rsa --generic-ssh-user ubuntu name1`
 
-Note: the --driver flat has support for AWS. But the intention to explicitly **_not_** use it is to make sure this provision guide could apply to any host machine, not just AWS hosted machines.
+Note: the --driver flag has support for AWS. But the intention to explicitly **_not_** use it is to make sure this provision guide could apply to any host machine, not just AWS hosted machines.
 
 The --generic-ip-address flag needs to be followed by the ip the ec2 instance ip.
 
@@ -27,9 +27,9 @@ The --generic-ssh-key flag needs to be followed by your private key, whose publi
 
 The --generic-ssh-user flag needs to be followed by the user name, in the case of Ubuntu EC2 instances, the default user name is ubuntu.
 
-Lately, supply a **name** for the docker machine. With this name, the provision machine will retain access to the remote host.
+Lately, supply a **name** for the docker machine.
 
-Do this for all the EC2 instances, to make sure docker is installed on all of them.
+Do this **for all the EC2 instances**, to make sure docker is installed on all of them.
 
 ## 4. Start swarm
 
@@ -44,3 +44,27 @@ Now your local docker command is pointing at the remote docker daemon, run:
 
 Then follow its console output to join the rest of the EC2 instances into the swarm.
 (it could be done by switching docker-machine env, or by using the -H flag of docker, the former is easier)
+
+## 5. Allow Jenkins to access swarm manager
+
+In order for Jenkins to continuously deploy to the swarm, it needs access to the swarm manager.
+
+In step 3, when the swarm manager EC2 instance was being provisioned. The docker-machine created some certificate files behind the scene.
+
+Those files should be generate under:
+
+`[User Home Dir]/.docker/machine/machines/[name of the swarm manager]`
+
+Those files need to be copied to jenkins(if the provision was done on Jenkins, then there is no need to copy).
+
+In a Jenkins deployment job, **at the start of its build script**, add:
+
+`export DOCKER_TLS_VERIFY="1"`
+`export DOCKER_HOST="tcp://[ip of the swarm manager]"`
+`export DOCKER_CERT_PATH="[path to the dir that contains certs]"`
+
+This will make following docker commands use the remote daemon, not the local one.
+
+Now, Jenkins should be able to access and deploy to the swarm.
+ 
+**Node**: Jenkins would only need access to the swarm manager, the other nodes are managed by the swarm manager. Jenkins does not need direct access to them.
