@@ -1,4 +1,4 @@
-# How to provision a docker swarm for deployment in AWS
+# How to provision a docker swarm for deployment in AWS (With ELB)
 
 ## 1. Network setup
 
