@@ -32,7 +32,7 @@ This will be needed by the `docker-machine create` command later.
 
 ## 4. Create ELB
 
-The reason to create ELB is that AWS has a limit on how many elastic ips each account could have, the default is 5, which is already used up.
+The reason to create ELB is that AWS has a limit on how many elastic ips each account could have, the default is 5, which could be easily used up.
 
 So in order for the swarm to be available via a constant address, an ELB is created to provide that constant url.
 
