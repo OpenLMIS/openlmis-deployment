@@ -3,24 +3,36 @@ services:
 
   requisition:
     image: openlmis/requisition
+    links:
+      - db
+      - log
     env_file: .env
     ports:
       - "8080:8080"
 
   notification:
     image: openlmis/notification
+    links:
+      - db
+      - log
     ports:
       - "8082:8080"
     env_file: .env
 
   referencedata:
     image: openlmis/referencedata
+    links:
+      - db
+      - log
     ports:
       - "8083:8080"
     env_file: .env
 
   auth:
     image: openlmis/auth
+    links:
+      - db
+      - log
     ports:
       - "8081:8080"
     env_file: .env
@@ -32,6 +44,8 @@ services:
 
   db:
     image: openlmis/postgres:latest
+    links:
+      - log
     env_file: .env
     logging:
       driver: syslog
