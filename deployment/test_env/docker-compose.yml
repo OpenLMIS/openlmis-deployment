@@ -13,11 +13,22 @@ services:
       - "8082:8080"
     env_file: .env
 
+  referencedata:
+    image: openlmis/referencedata
+    ports:
+      - "8083:8080"
+    env_file: .env
+
   auth:
     image: openlmis/auth
     ports:
       - "8081:8080"
     env_file: .env
+
+#  requisition-refui:
+#    image: openlmis/requisition-refui
+#    ports:
+#      - "9000:9000"
 
   db:
     image: openlmis/postgres:latest
