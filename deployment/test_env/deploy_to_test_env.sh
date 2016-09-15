@@ -10,5 +10,3 @@ docker pull $1
 /usr/local/bin/docker-compose down
 
 /usr/local/bin/docker-compose up -d
-
-/usr/local/bin/docker-compose logs
