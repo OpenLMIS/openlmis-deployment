@@ -5,6 +5,8 @@ export DOCKER_HOST="tcp://elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.c
 
 curl -LO https://raw.githubusercontent.com/OpenLMIS/openlmis-config/master/.env
 
+docker pull $1
+
 /usr/local/bin/docker-compose down
 
 /usr/local/bin/docker-compose up -d
