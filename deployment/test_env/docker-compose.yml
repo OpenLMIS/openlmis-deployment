@@ -1,46 +1,66 @@
 version: '2'
 services:
 
+  consul:
+    command: -server -bootstrap
+    image: gliderlabs/consul-server
+    ports:
+      - "8300"
+      - "8400"
+      - "8500:8500"
+      - "53"
+
+  registrator:
+    image: gliderlabs/registrator
+    command: -internal consul://consul:8500
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    links:
+      - consul
+
   requisition:
     image: openlmis/requisition
     links:
       - db
       - log
     env_file: .env
-    ports:
-      - "8080:8080"
+    environment:
+      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
+      - VIRTUAL_LOCATION=requisition
 
   notification:
     image: openlmis/notification
+    environment:
+      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
+      - VIRTUAL_LOCATION=notification
     links:
       - db
       - log
-    ports:
-      - "8082:8080"
     env_file: .env
 
   referencedata:
     image: openlmis/referencedata
+    environment:
+      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
+      - VIRTUAL_LOCATION=referencedata
     links:
       - db
       - log
-    ports:
-      - "8083:8080"
     env_file: .env
 
   auth:
     image: openlmis/auth
+    environment:
+      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
+      - VIRTUAL_LOCATION=auth
     links:
       - db
       - log
-    ports:
-      - "8081:8080"
     env_file: .env
 
 #  requisition-refui:
 #    image: openlmis/requisition-refui
-#    ports:
-#      - "9000:9000"
+# ref ui docker image does not run anything yet
 
   db:
     image: openlmis/postgres:latest
@@ -63,6 +83,15 @@ services:
       - rsyslog:/var/log
     ports:
       - "514:514"
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "8888:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /home/ubuntu/nginx.tmpl:/app/nginx.tmpl:ro
 
 volumes:
   pgdata:
