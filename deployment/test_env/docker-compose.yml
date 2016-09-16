@@ -63,7 +63,7 @@ services:
 # ref ui docker image does not run anything yet
 
   db:
-    image: openlmis/postgres:latest
+    image: openlmis/postgres
     links:
       - log
     env_file: .env
