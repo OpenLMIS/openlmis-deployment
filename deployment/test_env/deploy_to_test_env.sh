@@ -7,6 +7,10 @@ curl -LO https://raw.githubusercontent.com/OpenLMIS/openlmis-config/master/.env
 
 docker pull openlmis/rsyslog
 docker pull openlmis/postgres
+docker pull gliderlabs/consul-server
+docker pull gliderlabs/registrator
+docker pull jwilder/nginx-proxy
+
 docker pull $1
 
 /usr/local/bin/docker-compose down
