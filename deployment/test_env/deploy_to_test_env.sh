@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com:2376"
+./import.sh ~/host1.zip
 
+eval $(docker-machine env host1)
+
+docker-machine scp ./nginx.tmpl host1:~/nginx.tmpl
 curl -LO https://raw.githubusercontent.com/OpenLMIS/openlmis-config/master/.env
 
 docker pull openlmis/rsyslog
