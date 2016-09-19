@@ -92,6 +92,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /home/ubuntu/nginx.tmpl:/app/nginx.tmpl:ro
+#the nginx.tmpl file needs to be in place in the target machine before running compose
 
 volumes:
   pgdata:
