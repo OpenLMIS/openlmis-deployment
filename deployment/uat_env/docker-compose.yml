@@ -1,0 +1,101 @@
+version: '2'
+services:
+
+  consul:
+    command: -server -bootstrap
+    image: gliderlabs/consul-server
+    ports:
+      - "8300"
+      - "8400"
+      - "8500:8500"
+      - "53"
+
+  registrator:
+    image: gliderlabs/registrator
+    command: -internal consul://consul:8500
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    links:
+      - consul
+
+  requisition:
+    image: openlmis/requisition
+    links:
+      - db
+      - log
+    env_file: .env
+    environment:
+      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_LOCATION=requisition
+
+  notification:
+    image: openlmis/notification
+    environment:
+      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_LOCATION=notification
+    links:
+      - db
+      - log
+    env_file: .env
+
+  referencedata:
+    image: openlmis/referencedata
+    environment:
+      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_LOCATION=referencedata
+    links:
+      - db
+      - log
+    env_file: .env
+
+  auth:
+    image: openlmis/auth
+    environment:
+      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_LOCATION=auth
+    links:
+      - db
+      - log
+    env_file: .env
+
+#  requisition-refui:
+#    image: openlmis/requisition-refui
+# ref ui docker image does not run anything yet
+
+  db:
+    image: openlmis/postgres
+    links:
+      - log
+    env_file: .env
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        syslog-facility: "local1"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432"
+
+  log:
+    image: openlmis/rsyslog
+    volumes:
+      - rsyslog:/var/log
+    ports:
+      - "514:514"
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /home/ubuntu/nginx.tmpl:/app/nginx.tmpl:ro
+#the nginx.tmpl file needs to be in place in the target machine before running compose
+
+volumes:
+  pgdata:
+    external: false
+  rsyslog:
+    external: false
