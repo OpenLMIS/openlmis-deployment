@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-./import.sh ~/host1.zip
-
 eval $(/usr/local/bin/docker-machine env host1)
+# the above command can only run after the cert files are properly located in jenkins
+# details of how to do that is described in the provision markdown
 
 /usr/local/bin/docker-machine/docker-machine scp ./nginx.tmpl host1:~/nginx.tmpl
 
