@@ -10,7 +10,7 @@ if [ -d "$HOME/.docker/machine/machines/$FILENAME" ] ; then
 fi
 
 # cleanup
-rm -r ~/$FILENAME
+rm -r ./$FILENAME
 
 # extract
 unzip $TARGET -d ./$FILENAME
