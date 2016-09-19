@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+/usr/local/bin/docker-machine scp ./nginx.tmpl host1:~/nginx.tmpl
+
 eval $(/usr/local/bin/docker-machine env host1)
-# the above command can only run after the cert files are properly located in jenkins
+
+# the above two commands can only run after the cert files are properly located in jenkins
 # details of how to do that is described in the provision markdown
 
-/usr/local/bin/docker-machine/docker-machine scp ./nginx.tmpl host1:~/nginx.tmpl
 
 curl -LO https://raw.githubusercontent.com/OpenLMIS/openlmis-config/master/.env
 
