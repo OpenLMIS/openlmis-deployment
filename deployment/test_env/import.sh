@@ -10,19 +10,19 @@ if [ -d "$HOME/.docker/machine/machines/$FILENAME" ] ; then
 fi
 
 # cleanup
-rm -r /tmp/$FILENAME
+rm -r ~/$FILENAME
 
 # extract
-unzip $TARGET -d /tmp/$FILENAME
+unzip $TARGET -d ./$FILENAME
 
 # add correct $HOME var
-cat /tmp/$FILENAME/config.json | sed -e "s:{{HOME}}:$HOME:g" > /tmp/$FILENAME/config.json.fixed
-mv /tmp/$FILENAME/config.json.fixed /tmp/$FILENAME/config.json
+cat ./$FILENAME/config.json | sed -e "s:{{HOME}}:$HOME:g" > ./$FILENAME/config.json.fixed
+mv ./$FILENAME/config.json.fixed ./$FILENAME/config.json
 
 mkdir -p $HOME/.docker/machine/machines/$FILENAME
 
 # move it into docker machines files
-cp -r /tmp/$FILENAME $HOME/.docker/machine/machines/
+cp -r ./$FILENAME $HOME/.docker/machine/machines/
 
 # update the stupid raw driver
 machine-driverfix $FILENAME
