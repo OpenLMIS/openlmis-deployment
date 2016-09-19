@@ -13,5 +13,5 @@ fi
 /usr/local/bin/docker-compose up -d
 
 
-docker exec -d nginx-proxy wget https://raw.githubusercontent.com/OpenLMIS/openlmis-deployment/master/deployment/shared/nginx.tmpl -O /app/nginx.tmpl
+docker exec nginx-proxy wget https://raw.githubusercontent.com/OpenLMIS/openlmis-deployment/master/deployment/shared/nginx.tmpl -O /app/nginx.tmpl
 docker restart nginx-proxy
