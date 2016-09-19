@@ -5,6 +5,6 @@ export DOCKER_HOST="tcp://elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.c
 
 ../shared/init_env.sh
 
-../shared/pull_images.sh
+../shared/pull_images.sh $1
 
 ../shared/restart.sh
