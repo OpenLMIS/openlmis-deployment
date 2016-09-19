@@ -2,9 +2,10 @@
 
 ./import.sh ~/host1.zip
 
-eval $(docker-machine env host1)
+eval $(/usr/local/bin/docker-machine env host1)
 
-docker-machine scp ./nginx.tmpl host1:~/nginx.tmpl
+/usr/local/bin/docker-machine/docker-machine scp ./nginx.tmpl host1:~/nginx.tmpl
+
 curl -LO https://raw.githubusercontent.com/OpenLMIS/openlmis-config/master/.env
 
 docker pull openlmis/rsyslog
