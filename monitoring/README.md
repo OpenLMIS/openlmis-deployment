@@ -14,3 +14,4 @@ This is running in both test and UAT envs. But the web UI is exposed from UAT.
 
 # How to add another env into the monitor
 
+curl -s https://raw.githubusercontent.com/OpenLMIS/openlmis-deployment/master/monitoring/start_monitor.sh | bash
