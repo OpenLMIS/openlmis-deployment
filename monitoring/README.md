@@ -12,6 +12,8 @@ http://52.52.3.5:3000/dashboard/db/uat-docker-host
 
 This is running in both test and UAT envs. But the web UI is exposed from UAT.
 
+It's configured to automatically restart, so you don't have to worry about system reboot.
+
 # How to add another docker host into the monitor
 
 1.  ssh into the docker host that you want to monitor, find or create a suitable directory, then run:
