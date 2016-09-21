@@ -6,4 +6,4 @@ chmod +x docker-compose
 
 cp -r ./openlmis-deployment-master/monitoring/* ./
 
-docker-compose up -d
+docker-compose -p prometheus up -d
