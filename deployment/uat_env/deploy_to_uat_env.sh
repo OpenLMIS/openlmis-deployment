@@ -2,6 +2,7 @@
 
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://52.52.3.5:2376"
+export DOCKER_CERT_PATH="${PWD%/*/*}/UATHost"
 
 ../shared/init_env.sh
 
