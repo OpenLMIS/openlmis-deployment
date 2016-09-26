@@ -22,8 +22,9 @@ To get these files, you need to be **Jenkins admin**.
 
 2.  run this command
 
-    `docker exec -t [PostgresContainerName] /usr/lib/postgresql/9.4/bin/pg_dumpall -c -U postgres > [DumpFileName].sql`
+    `docker exec -t [PostgresContainerName] /usr/lib/postgresql/9.4/bin/pg_dumpall -c -U [DBUserName] > [DumpFileName].sql`
     
-    PostgresContainerName is usually testenv_db_1 or uatenv_db1, you can use `docker ps` to find out.
-    DumpFileName is the file name where you want the back up to be stored **in the host machine**.
+    **PostgresContainerName** is usually testenv_db_1 or uatenv_db1, you can use `docker ps` to find out.
+    **DBUserName** is the one that was specified in the .env file, it's usually just "postgres".
+    **DumpFileName** is the file name where you want the back up to be stored **in the host machine**.
     
