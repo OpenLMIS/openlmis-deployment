@@ -15,3 +15,15 @@ These scripts **won't** work out of the box in a dev's local machine, to make th
     Similar to the .env file, they are also present in Jenkins and copied to a deployment job's workspace(either Jenkins slave or master) every time it is ran.
      
 To get these files, you need to be **Jenkins admin**.
+
+# How to backup persisted data?
+
+1.  ssh into the docker host that you want, either test env or UAT env
+
+2.  run this command
+
+    `docker exec -t [PostgresContainerName] /usr/lib/postgresql/9.4/bin/pg_dumpall -c -U postgres > [DumpFileName].sql`
+    
+    PostgresContainerName is usually testenv_db_1 or uatenv_db1, you can use `docker ps` to find out.
+    DumpFileName is the file name where you want the back up to be stored **in the host machine**.
+    
