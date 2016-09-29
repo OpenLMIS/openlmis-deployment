@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://52.52.3.5:2376"
+export DOCKER_HOST="tcp://uat-env-elb-1284865908.us-east-1.elb.amazonaws.com:2376"
 export DOCKER_CERT_PATH="${PWD%/*/*}"
 
 ../shared/init_env.sh
