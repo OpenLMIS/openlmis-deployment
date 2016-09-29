@@ -28,14 +28,14 @@ services:
       - log
     env_file: .env
     environment:
-      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_HOST=uat-env-elb-1284865908.us-east-1.elb.amazonaws.com 
       - VIRTUAL_LOCATION=requisition
 
   notification:
     restart: always
     image: openlmis/notification
     environment:
-      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_HOST=uat-env-elb-1284865908.us-east-1.elb.amazonaws.com 
       - VIRTUAL_LOCATION=notification
     links:
       - db
@@ -46,7 +46,7 @@ services:
     restart: always
     image: openlmis/referencedata
     environment:
-      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_HOST=uat-env-elb-1284865908.us-east-1.elb.amazonaws.com 
       - VIRTUAL_LOCATION=referencedata
     links:
       - db
@@ -57,7 +57,7 @@ services:
     restart: always
     image: openlmis/auth
     environment:
-      - VIRTUAL_HOST=52.52.3.5
+      - VIRTUAL_HOST=uat-env-elb-1284865908.us-east-1.elb.amazonaws.com 
       - VIRTUAL_LOCATION=auth
     links:
       - db
