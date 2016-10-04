@@ -20,59 +20,60 @@ services:
     links:
       - consul
 
+  requisition-refui:
+    image: openlmis/requisition-refui
+    env_file: .env
+    environment:
+      # Changing the virtual location affects loading of the assets on UI. Handle with care.
+      - VIRTUAL_LOCATION=public
+
   requisition:
     restart: always
     image: openlmis/requisition
-    links:
-      - db
-      - log
     env_file: .env
     environment:
-      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
-      - VIRTUAL_LOCATION=requisition
-
-  notification:
-    restart: always
-    image: openlmis/notification
-    environment:
-      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
-      - VIRTUAL_LOCATION=notification
-    links:
-      - db
-      - log
-    env_file: .env
+      VIRTUAL_LOCATION: requisition
+      JAVA_OPTS: '-Dlogging.config=/logback.xml'
+    volumes:
+      - './logback.xml:/logback.xml'
+    depends_on: [log]
 
   referencedata:
     restart: always
     image: openlmis/referencedata
-    environment:
-      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
-      - VIRTUAL_LOCATION=referencedata
-    links:
-      - db
-      - log
     env_file: .env
+    environment:
+      VIRTUAL_LOCATION: referencedata
+      JAVA_OPTS: '-Dlogging.config=/logback.xml'
+    volumes:
+      - './logback.xml:/logback.xml'
+    depends_on: [log]
 
   auth:
     restart: always
     image: openlmis/auth
-    environment:
-      - VIRTUAL_HOST=elb-test-env-swarm-683069932.us-east-1.elb.amazonaws.com
-      - VIRTUAL_LOCATION=auth
-    links:
-      - db
-      - log
     env_file: .env
+    environment:
+      VIRTUAL_LOCATION: auth
+      JAVA_OPTS: '-Dlogging.config=/logback.xml'
+    volumes:
+      - './logback.xml:/logback.xml'
+    depends_on: [log]
 
-#  requisition-refui:
-#    image: openlmis/requisition-refui
-# ref ui docker image does not run anything yet
+  notification:
+    restart: always
+    image: openlmis/notification
+    env_file: .env
+    environment:
+      VIRTUAL_LOCATION: notification
+      JAVA_OPTS: '-Dlogging.config=/logback.xml'
+    volumes:
+      - './logback.xml:/logback.xml'
+    depends_on: [log]
 
   db:
     restart: always
     image: openlmis/postgres
-    links:
-      - log
     env_file: .env
     logging:
       driver: syslog
@@ -83,6 +84,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432"
+    depends_on: [log]
 
   log:
     restart: always
@@ -100,6 +102,7 @@ services:
       - "8888:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx.tmpl:/app/nginx.tmpl:ro
 
 volumes:
   pgdata:
