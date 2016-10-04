@@ -102,7 +102,6 @@ services:
       - "8888:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx.tmpl:/app/nginx.tmpl:ro
 
 volumes:
   pgdata:
