@@ -1,5 +1,17 @@
 Scripts in this directory are meant to be ran in Jenkins.
 
+# Overview
+
+* `shared/` contains scripts for the Jenkins job(s):
+  * `init_env.sh` is run in Jenkins to copy the docker environment files (has secure credentials) from `JENKINS_HOME/credentials/` to the current job's workspace
+  * `pull_images.sh` always pulls/refreshes the infrastructure images (e.g. db, logs, etc), and then at the end will pull the image for the service that the Jenkins job is attempting to deploy (e.g. requistion, auth, referencedata, etc).
+  * `restart.sh` is paramartized by Jenkins to either `keep` or `wipe` volumes (e.g. database and logging volumes).  When run this brings the deployed reference distribution down, and then back up.  After it's brought up, the `nginx.tmpl` file is copied directly into the running nginx container just started.
+  * `nginx.tmpl` is the override of the nginx template for docker and proxying - this is a copy from [openlmis-blue](http://github.com/openlmis/openlmis-blue).  See `restart.sh` for how it's used.
+* `test_env` has a compose file which is the Reference distribution, and a script for Jenkins to kick everything off.
+* `uat_env` has a compose file which is the Reference distribution, and a script for Jenkins to kick everything off.
+
+# Local Usage
+
 These scripts **won't** work out of the box in a dev's local machine, to make them work, you need a few files that are present in Jenkins but not in your local clone of this repo:
 
 1.  The .env file
