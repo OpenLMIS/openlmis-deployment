@@ -29,7 +29,7 @@ services:
 
   requisition:
     restart: always
-    image: openlmis/requisition
+    image: openlmis/requisition:3.0.0-beta-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: requisition
@@ -37,7 +37,7 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata
+    image: openlmis/referencedata:3.0.0-beta-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: referencedata
@@ -45,7 +45,7 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth
+    image: openlmis/auth:3.0.0-beta-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: auth
@@ -53,7 +53,7 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification
+    image: openlmis/notification:3.0.0-beta-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: notification
