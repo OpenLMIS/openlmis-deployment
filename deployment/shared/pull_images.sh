@@ -6,5 +6,5 @@ docker pull gliderlabs/consul-server
 docker pull gliderlabs/registrator
 docker pull jwilder/nginx-proxy
 
-docker pull $1
+docker-compose pull $1
 #$1 is the parameter passed in
