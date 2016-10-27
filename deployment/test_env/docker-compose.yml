@@ -21,7 +21,7 @@ services:
       - consul
 
   requisition-refui:
-    image: openlmis/requisition-refui:3.0.0-beta-SNAPSHOT
+    image: openlmis/requisition-refui:3.0.0-SNAPSHOT
     env_file: .env
     environment:
       # Changing the virtual location affects loading of the assets on UI. Handle with care.
@@ -29,7 +29,7 @@ services:
 
   requisition:
     restart: always
-    image: openlmis/requisition:3.0.0-beta-SNAPSHOT
+    image: openlmis/requisition:3.0.0-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: requisition
@@ -37,7 +37,7 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:3.0.0-beta-SNAPSHOT
+    image: openlmis/referencedata:3.0.0-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: referencedata
@@ -45,7 +45,7 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:3.0.0-beta-SNAPSHOT
+    image: openlmis/auth:3.0.0-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: auth
@@ -53,7 +53,7 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification:3.0.0-beta-SNAPSHOT
+    image: openlmis/notification:3.0.0-SNAPSHOT
     env_file: .env
     environment:
       VIRTUAL_LOCATION: notification
