@@ -33,6 +33,7 @@ services:
     env_file: .env
     environment:
       VIRTUAL_LOCATION: requisition
+      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=file:///demo-data/data.sql'
     depends_on: [log]
 
   referencedata:
@@ -41,6 +42,7 @@ services:
     env_file: .env
     environment:
       VIRTUAL_LOCATION: referencedata
+      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=file:///demo-data/data.sql'
     depends_on: [log]
 
   auth:
@@ -49,6 +51,7 @@ services:
     env_file: .env
     environment:
       VIRTUAL_LOCATION: auth
+      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=file:///demo-data/data.sql'
     depends_on: [log]
 
   notification:
