@@ -62,6 +62,15 @@ services:
       VIRTUAL_LOCATION: notification
     depends_on: [log]
 
+  fulfillment:
+    restart: always
+    image: openlmis/fulfillment:3.0.0-SNAPSHOT
+    env_file: .env
+    environment:
+      VIRTUAL_LOCATION: fulfillment
+      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+    depends_on: [log]
+
   db:
     restart: always
     image: openlmis/postgres
