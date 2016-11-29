@@ -103,6 +103,13 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
+  ftp:
+    image: hauptmedia/proftpd
+    ports:
+      - "21:21"
+      - "20:20"
+    env_file: .env
+
 volumes:
   pgdata:
     external: false
