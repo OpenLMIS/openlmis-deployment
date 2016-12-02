@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 
-if [ $KEEP_OR_WIPE == "wipe" ];
-#when run locally, and the env var is not present, else branch will run, thus to keep data
-then
-echo "will WIPE data!!"
-/usr/local/bin/docker-compose down -v
+if [ ! -z "$1" ];
+  then
+  /usr/local/bin/docker-compose stop $1
+  /usr/local/bin/docker-compose up -d $1
 else
-echo "will keep data";
-/usr/local/bin/docker-compose down
+  if [ "$KEEP_OR_WIPE" == "wipe" ];
+    #when run locally, and the env var is not present, else branch will run, thus to keep data
+    then
+    echo "Will WIPE data!"
+    /usr/local/bin/docker-compose down -v
+  else
+    echo "Will keep data";
+    /usr/local/bin/docker-compose down
+  fi
+  /usr/local/bin/docker-compose up -d
 fi
 
-/usr/local/bin/docker-compose up -d
-
-
-docker exec nginx-proxy wget https://raw.githubusercontent.com/OpenLMIS/openlmis-blue/master/nginx.tmpl -O /app/nginx.tmpl
-docker restart nginx-proxy

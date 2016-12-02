@@ -2,9 +2,9 @@
 
 docker pull openlmis/rsyslog
 docker pull openlmis/postgres
+docker pull openlmis/nginx
 docker pull gliderlabs/consul-server
-docker pull gliderlabs/registrator
-docker pull jwilder/nginx-proxy
 
+# $1 is the parameter passed in
 /usr/local/bin/docker-compose pull $1
-#$1 is the parameter passed in
+
