@@ -13,8 +13,8 @@ if [ ! -z "$1" ];
   else
     echo "$KEEP_MSG";
     /usr/local/bin/docker-compose stop $1
-    /usr/local/bin/docker-compose up -d $1
   fi
+  /usr/local/bin/docker-compose up -d $1
 else
   if [ "$KEEP_OR_WIPE" == "wipe" ];
     #when run locally, and the env var is not present, else branch will run, thus to keep data
