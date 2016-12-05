@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-$WIPE_MSG="Will WIPE data!"
-$KEEP_MSG="Will keep data."
+WIPE_MSG="Will WIPE data!"
+KEEP_MSG="Will keep data."
 
 if [ ! -z "$1" ];
   then
