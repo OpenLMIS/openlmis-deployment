@@ -8,4 +8,4 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 
 ../shared/pull_images.sh $1
 
-../shared/restart.sh
+../shared/restart.sh $1
