@@ -9,14 +9,16 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
-
+      
   nginx:
-    image: openlmis/openlmis-nginx
+    image: openlmis/nginx
     ports:
-      - "80:80"
+      - "8888:80"
+    volumes:
+      - consul-template:/var/log/consul-template
+      - nginx:/var/log/nginx
     env_file: .env
     depends_on: [consul]
-    network_mode: host
 
   requisition-refui:
     image: openlmis/requisition-refui:3.0.0-SNAPSHOT
@@ -24,6 +26,7 @@ services:
     environment:
       # Changing the virtual location affects loading of the assets on UI. Handle with care.
       - VIRTUAL_LOCATION=public
+    depends_on: [consul]
 
   requisition:
     restart: always
@@ -100,3 +103,7 @@ volumes:
     external: false
   rsyslog:
     external: false
+  consul-template:
+    external: false
+  nginx:
+external: false
