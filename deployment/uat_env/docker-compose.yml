@@ -106,4 +106,4 @@ volumes:
   consul-template:
     external: false
   nginx:
-external: false
+    external: false
