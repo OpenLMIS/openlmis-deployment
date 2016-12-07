@@ -2,7 +2,6 @@ version: '2'
 services:
 
   consul:
-    restart: always
     command: -server -bootstrap
     image: gliderlabs/consul-server
     ports:
@@ -11,14 +10,13 @@ services:
       - "8500:8500"
       - "53"
 
-  registrator:
-    restart: always
-    image: gliderlabs/registrator
-    command: -internal consul://consul:8500
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock
-    links:
-      - consul
+  nginx:
+    image: openlmis/openlmis-nginx
+    ports:
+      - "80:80"
+    env_file: .env
+    depends_on: [consul]
+    network_mode: host
 
   requisition-refui:
     image: openlmis/requisition-refui:3.0.0-SNAPSHOT
@@ -32,7 +30,6 @@ services:
     image: openlmis/requisition:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      VIRTUAL_LOCATION: requisition
       JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
@@ -41,7 +38,6 @@ services:
     image: openlmis/referencedata:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      VIRTUAL_LOCATION: referencedata
       JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
@@ -50,7 +46,6 @@ services:
     image: openlmis/auth:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      VIRTUAL_LOCATION: auth
       JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
@@ -58,8 +53,6 @@ services:
     restart: always
     image: openlmis/notification:3.0.0-SNAPSHOT
     env_file: .env
-    environment:
-      VIRTUAL_LOCATION: notification
     depends_on: [log]
 
   fulfillment:
@@ -67,7 +60,6 @@ services:
     image: openlmis/fulfillment:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      VIRTUAL_LOCATION: fulfillment
       JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
@@ -93,15 +85,7 @@ services:
       - rsyslog:/var/log
     ports:
       - "514:514"
-
-  nginx-proxy:
-    restart: always
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
-    ports:
-      - "80:80"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on: [consul]
 
   ftp:
     image: hauptmedia/proftpd
@@ -109,6 +93,7 @@ services:
       - "21:21"
       - "20:20"
     env_file: .env
+    depends_on: [consul]
 
 volumes:
   pgdata:
