@@ -14,6 +14,9 @@ services:
     image: openlmis/nginx
     ports:
       - "8888:80"
+    volumes:
+      - consul-template:/var/log/consul-template
+      - nginx:/var/log/nginx
     env_file: .env
     depends_on: [consul]
 
@@ -98,4 +101,8 @@ volumes:
   pgdata:
     external: false
   rsyslog:
+    external: false
+  consul-template:
+    external: false
+  nginx:
     external: false
