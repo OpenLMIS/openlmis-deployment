@@ -13,7 +13,7 @@ services:
   nginx:
     image: openlmis/nginx
     ports:
-      - "8888:80"
+      - "80:80"
     volumes:
       - consul-template:/var/log/consul-template
       - nginx:/var/log/nginx
