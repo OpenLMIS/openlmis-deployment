@@ -9,14 +9,13 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
-
+      
   nginx:
     image: openlmis/nginx
     ports:
       - "8888:80"
     env_file: .env
     depends_on: [consul]
-    network_mode: host
 
   requisition-refui:
     image: openlmis/requisition-refui:3.0.0-SNAPSHOT
