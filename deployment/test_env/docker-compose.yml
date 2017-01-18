@@ -29,7 +29,7 @@ services:
     image: openlmis/requisition:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
   referencedata:
@@ -37,7 +37,7 @@ services:
     image: openlmis/referencedata:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
   auth:
@@ -45,13 +45,15 @@ services:
     image: openlmis/auth:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
   notification:
     restart: always
     image: openlmis/notification:3.0.0-SNAPSHOT
     env_file: .env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m'
     depends_on: [log]
 
   fulfillment:
@@ -59,7 +61,7 @@ services:
     image: openlmis/fulfillment:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
   stockmanagement:
@@ -67,7 +69,7 @@ services:
     image: openlmis/stockmanagement:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
     depends_on: [log]
 
   db:
