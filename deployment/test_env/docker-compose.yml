@@ -66,7 +66,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:3.0.0-SNAPSHOT
+    image: openlmis/stockmanagement:1.0.0-SNAPSHOT
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
