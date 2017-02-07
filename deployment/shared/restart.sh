@@ -3,12 +3,14 @@
 WIPE_MSG="Will WIPE data!"
 KEEP_MSG="Will keep data."
 
-if [ "$KEEP_OR_WIPE" == "wipe" ];
-  then
+/usr/local/bin/docker-compose down
+
+if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "$WIPE_MSG"
-  /usr/local/bin/docker-compose down -v
+  unset spring_profiles_active
+  /usr/local/bin/docker-compose up -d
 else
   echo "$KEEP_MSG";
-  /usr/local/bin/docker-compose down
+  export spring_profiles_active="production"
+  /usr/local/bin/docker-compose up -d
 fi
-/usr/local/bin/docker-compose up -d
