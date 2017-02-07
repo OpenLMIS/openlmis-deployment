@@ -30,7 +30,6 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
-      spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
   referencedata:
@@ -39,7 +38,6 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
-      spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
   auth:
@@ -48,7 +46,6 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
-      spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
   notification:
@@ -57,7 +54,6 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m'
-      spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
   fulfillment:
@@ -66,7 +62,6 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
-      spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
   stockmanagement:
@@ -75,7 +70,6 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
-      spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
   db:
