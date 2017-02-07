@@ -38,7 +38,7 @@ services:
     image: openlmis/referencedata:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xms512m -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
     depends_on: [log]
 
