@@ -112,6 +112,16 @@ services:
       - service-configuration
       - consul
 
+  scalyr:
+    image: openlmis/scalyr
+    container_name: scalyr-agent
+    env_file: .env
+    volumes:
+      - 'service-config:/config'
+      - '/run/docker.sock:/var/scalyr/docker.sock'
+      - 'syslog:/var/log'
+      - 'nginx-log:/var/log/nginx/log'
+
   service-configuration:
     build:
       context: ./config
