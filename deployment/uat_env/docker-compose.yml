@@ -14,23 +14,28 @@ services:
     image: openlmis/nginx
     ports:
       - "80:80"
-    volumes:
-      - consul-template:/var/log/consul-template
-      - nginx:/var/log/nginx
     env_file: .env
+    environment:
+      NGINX_LOG_DIR: '/var/log/nginx/log'
+    volumes:
+      - 'nginx-log:/var/log/nginx/log'
+      - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
 
   requisition-refui:
     image: openlmis/requisition-refui:3.0.0-SNAPSHOT
     env_file: .env
+    depends_on: [consul]
 
   requisition:
     restart: always
     image: openlmis/requisition:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
     depends_on: [log]
 
   referencedata:
@@ -38,8 +43,10 @@ services:
     image: openlmis/referencedata:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
     depends_on: [log]
 
   auth:
@@ -47,17 +54,21 @@ services:
     image: openlmis/auth:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
       spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
     depends_on: [log]
 
   notification:
     restart: always
     image: openlmis/notification:3.0.0-SNAPSHOT
-    environment:
-      JAVA_OPTS: '-server -Xmx512m'
-      spring_profiles_active: ${spring_profiles_active}
     env_file: .env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
     depends_on: [log]
 
   fulfillment:
@@ -65,8 +76,10 @@ services:
     image: openlmis/fulfillment:3.0.0-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
     depends_on: [log]
 
   stockmanagement:
@@ -74,33 +87,46 @@ services:
     image: openlmis/stockmanagement:1.0.0-BETA-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dspring.jpa.properties.hibernate.hbm2ddl.import_files=/bootstrap.sql,file:///demo-data/data.sql'
       spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
     depends_on: [log]
 
   db:
     restart: always
     image: openlmis/postgres
     env_file: .env
-    logging:
-      driver: syslog
-      options:
-        syslog-address: "tcp://localhost:514"
-        syslog-facility: "local1"
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432"
-    depends_on: [log]
+    depends_on: [consul]
 
   log:
     restart: always
     image: openlmis/rsyslog
     volumes:
-      - rsyslog:/var/log
-    ports:
-      - "514:514"
-    depends_on: [consul]
+      - 'syslog:/var/log'
+    depends_on:
+      - service-configuration
+      - consul
+
+  scalyr:
+    image: openlmis/scalyr
+    container_name: scalyr-agent
+    env_file: .env
+    volumes:
+      - 'service-config:/config'
+      - '/run/docker.sock:/var/scalyr/docker.sock'
+      - 'syslog:/var/log'
+      - 'nginx-log:/var/log/nginx/log'
+
+  service-configuration:
+    build:
+      context: ./config
+    volumes:
+      - service-config:/config
 
   ftp:
     image: hauptmedia/proftpd
@@ -111,11 +137,13 @@ services:
     depends_on: [consul]
 
 volumes:
+  syslog:
+    external: false
+  nginx-log:
+    external: false
+  consul-template-log:
+    external: false
+  service-config:
+    external: false
   pgdata:
-    external: false
-  rsyslog:
-    external: false
-  consul-template:
-    external: false
-  nginx:
     external: false
