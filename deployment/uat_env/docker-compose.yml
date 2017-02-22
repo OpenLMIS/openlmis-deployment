@@ -93,16 +93,6 @@ services:
       - 'service-config:/config'
     depends_on: [log]
 
-  db:
-    restart: always
-    image: openlmis/postgres
-    env_file: .env
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432"
-    depends_on: [consul]
-
   log:
     restart: always
     image: openlmis/rsyslog
@@ -144,6 +134,4 @@ volumes:
   consul-template-log:
     external: false
   service-config:
-    external: false
-  pgdata:
     external: false
