@@ -46,6 +46,7 @@ It's **not** recommended that you connect to the remote deployment environments,
 
 # How to backup persisted data?
 
+## if using ref distro's included db container
 1.  ssh into the docker host that you want, either test env or UAT env.  Or use the technique above to connect your docker client to the remote host as needed
 
 2.  run this command
@@ -56,3 +57,12 @@ It's **not** recommended that you connect to the remote deployment environments,
     **DBUserName** is the one that was specified in the .env file, it's usually just "postgres".
     **DumpFileName** is the file name where you want the back up to be stored **in the host machine**.
     
+## using external postgres installation (e.g. RDS)
+
+1. ssh into the docker host that you want, either test env or UAT env.
+2. Note the postgres host, username and password used for that install.
+3. run the following command:
+
+```
+docker run -it --rm openlmis/postgres bash
+> pg_dump -h [PostgresHost] -U [PostgresUsername] open_lmis > [DumpFileName].sql
