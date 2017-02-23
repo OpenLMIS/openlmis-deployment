@@ -49,7 +49,7 @@ And ELB determines the health of a target by pinging it.
 So, in the EC2 instance chosen as the swarm manager, start apache2 service at port 80(or any other port you may prefer).
 Then in ELB settings, set it to ping that port.
  
-The apache2 service starts itself automatically after the system is rebooted, so this ensures that **ELB will start forwarding immediately if the instance reboots**.
+For OpenLMIS the Nginx container starts itself automatically after the system is rebooted, so this ensures that **ELB will start forwarding immediately if the instance reboots**.
 
 ## 6. Provision **all** EC2 instances
 
