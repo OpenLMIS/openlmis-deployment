@@ -20,7 +20,7 @@ not utilize this service.
 * A SSL certificate from AWS Certificate Manager
 * A ELB that can route to/from the OpenLMIS instance and serve the ACM SSL certificate (this becomes more useful when running out 
 of Elastic IPs)
-* an EC2 Instance (m4.large - 2VPU, 8GiB memory, 30GB EBS store)
+* an EC2 Instance (m4.large - 2vCPU, 8GiB memory, 30GB EBS store)
 * an RDS Instance (you could start with the smallest one, and then upgrade based on need)
 * a VPC for your EC2 and RDS instances, with appropriate security group - SSH, HTTP, HTTPs, Postgres (limit source to Secuurity Group)
 at minimum.
