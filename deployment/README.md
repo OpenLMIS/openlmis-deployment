@@ -57,12 +57,7 @@ It's **not** recommended that you connect to the remote deployment environments,
     **DBUserName** is the one that was specified in the .env file, it's usually just "postgres".
     **DumpFileName** is the file name where you want the back up to be stored **in the host machine**.
     
-## using external postgres installation (e.g. RDS)
+## using Amazon's RDS
 
-1. ssh into the docker host that you want, either test env or UAT env.
-2. Note the postgres host, username and password used for that install.
-3. run the following command:
-
-```
-docker run -it --rm openlmis/postgres bash
-> pg_dump -h [PostgresHost] -U [PostgresUsername] open_lmis > [DumpFileName].sql
+RDS provides a number of desirable features that are more ideal for production environments, including automated backups.  To backup and
+restore the OpenLMIS database when using RDS, follow Amazon's documentation:  http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html
