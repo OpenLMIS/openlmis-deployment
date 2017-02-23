@@ -13,6 +13,7 @@ The basic ingredients of an OpenLMIS deployment are:
 * a computer/instance/etc that can run Docker Machine (as well as Compose, etc) with enough bandiwdth, processing power, memory and 
 storage to run many (6+) Services and associated utilities
 * a computer/instance/etc that can run PostgreSQL for those Services
+* credentials with an SMTP server to send emails
 
 In AWS this would look like:
 * A DNS provider for your domain name (e.g. test.openlmis.org).  This could be Route 53, however currently OpenLMIS deployments do 
@@ -24,6 +25,7 @@ of Elastic IPs)
 * an RDS Instance (you could start with the smallest one, and then upgrade based on need)
 * a VPC for your EC2 and RDS instances, with appropriate security group - SSH, HTTP, HTTPs, Postgres (limit source to Secuurity Group)
 at minimum.
+* Amazon SES with either the domain (w/DKIM) verified or a specific from-address
 
 For more information on setting this up, see the [Provisioning](provision/Provision-single-host.md) section and also follow the 
 link for backing up/restoring [RDS](deployment#using-amazons-rds)
