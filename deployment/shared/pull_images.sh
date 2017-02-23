@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-docker pull openlmis/rsyslog
+docker pull openlmis/rsyslog:1
 docker pull openlmis/postgres:9.4
-docker pull openlmis/nginx
+docker pull openlmis/nginx:1
 docker pull gliderlabs/consul-server
 
 # $1 is the parameter passed in
