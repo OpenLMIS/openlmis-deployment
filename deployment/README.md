@@ -9,6 +9,7 @@ Scripts in this directory are meant to be ran in Jenkins.
   * `nginx.tmpl` is the override of the nginx template for docker and proxying - this is a copy from [openlmis-ref-distro](http://github.com/openlmis/openlmis-ref-distro).  See `restart.sh` for how it's used.
 * `test_env` has a compose file which is the Reference distribution, and a script for Jenkins to kick everything off.
 * `uat_env` has a compose file which is the Reference distribution, and a script for Jenkins to kick everything off.
+* `demo_env` has a compose file which is the latest stable version of the Reference distrubution, and a script for Jenkins to kick everything off.
 
 # Local Usage
 
