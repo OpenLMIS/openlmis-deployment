@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 docker pull openlmis/rsyslog:1
-docker pull openlmis/postgres:9.6
+docker pull openlmis/postgres:9.6-postgis
 docker pull openlmis/nginx:1
 docker pull gliderlabs/consul-server
 
