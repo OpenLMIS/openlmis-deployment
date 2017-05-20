@@ -1,3 +1,4 @@
+# How to provision a single Docker host in AWS
 If case the deployment target is one single host, then swarm is not needed.
 
 In that case, refer to Provision-swarm-With-Elastic-ip.md for step 1, 2, 3, 5.
@@ -14,7 +15,7 @@ However, you can manually provision the single host, but then making that host r
 If deploying OpenLMIS with the included Docker Container for Postgres, then no further steps are needed.  However this setup
 is recommended only for development / testing environments and not recommended for production installs.
 
-Test and UAT environments in this repository demonstrate that Postgres could be installed outside of Docker and OpenLMIS 
+Test and UAT environments in this repository demonstrate that Postgres could be installed outside of Docker and OpenLMIS
 services may be pointed to that Postgres server.  Test and UAT both use Amazon's RDS service to help manage production-grade
 database services such as automated patch release updates, rolling backups, snapshots, etc.
 
