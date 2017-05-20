@@ -1,6 +1,8 @@
+# Deployment Environments
+
 Scripts in this directory are meant to be ran in Jenkins.
 
-# Overview
+## Overview
 
 * `shared/` contains scripts for the Jenkins job(s):
   * `init_env.sh` is run in Jenkins to copy the docker environment files (has secure credentials) from `JENKINS_HOME/credentials/` to the current job's workspace
@@ -11,7 +13,7 @@ Scripts in this directory are meant to be ran in Jenkins.
 * `uat_env` has a compose file which is the Reference distribution, and a script for Jenkins to kick everything off.
 * `demo_env` has a compose file which is the latest stable version of the Reference distrubution, and a script for Jenkins to kick everything off.
 
-# Local Usage
+## Local Usage
 
 These scripts **won't** work out of the box in a dev's local machine, to make them work, you need a few files that are present in Jenkins but not in your local clone of this repo:
 
@@ -45,9 +47,9 @@ It's **not** recommended that you connect to the remote deployment environments,
   After this, running docker commands in your shell will be ran against the remote machine.  e.g. docker inspect, logs, etc
 
 
-# How to backup persisted data?
+## How to backup persisted data?
 
-## if using ref distro's included db container
+### if using ref distro's included db container
 1.  ssh into the docker host that you want, either test env or UAT env.  Or use the technique above to connect your docker client to the remote host as needed
 
 2.  run this command
@@ -58,7 +60,7 @@ It's **not** recommended that you connect to the remote deployment environments,
     **DBUserName** is the one that was specified in the .env file, it's usually just "postgres".
     **DumpFileName** is the file name where you want the back up to be stored **in the host machine**.
     
-## using Amazon's RDS
+### using Amazon's RDS
 
 RDS provides a number of desirable features that are more ideal for production environments, including automated backups.  To backup and
 restore the OpenLMIS database when using RDS, follow Amazon's documentation:  http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html
