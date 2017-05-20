@@ -1,6 +1,6 @@
-# openlmis-deployment
-Scripts for provisioning and deployment of OpenLMIS v3.  This repository holds specific tools for managing OpenLMIS test (CI)
-and UAT deployments, as well as lays out a general recipe for deploying OpenLMIS.
+# OpenLMIS Deployment Provisioning and Environments
+This repository contains how-tos and scripts for provisioning and deployment of OpenLMIS v3.  The specific scripts here
+are actively utilized to for specific automated deployments, which we hope also form a basis for implementers to use as a template.
 
 ## Recommended deployment topology
 
