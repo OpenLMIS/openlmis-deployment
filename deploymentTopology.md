@@ -25,4 +25,4 @@ at minimum.
 
 For more information on setting this up, see the [Provisioning](provision/Provision-single-host.md) section and also follow the
 link for backing up/restoring [RDS](deployment#using-amazons-rds). For more information on how to
-configure you RDS please visit [RDS configuration](provision/RDS-configuration.md) page.
+configure your RDS please visit [RDS configuration](provision/RDS-configuration.md) page.
