@@ -23,13 +23,13 @@ services:
     depends_on: [consul]
 
   reference-ui:
-    image: openlmis/reference-ui:5.0.1-SNAPSHOT
+    image: openlmis/reference-ui:5.0.1
     env_file: .env
     depends_on: [consul]
 
   requisition:
     restart: always
-    image: openlmis/requisition:3.1.5-SNAPSHOT
+    image: openlmis/requisition:3.1.4
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -40,7 +40,7 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:6.0.1-SNAPSHOT
+    image: openlmis/referencedata:6.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -51,7 +51,7 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:3.0.3-SNAPSHOT
+    image: openlmis/auth:3.0.2
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -62,7 +62,7 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification:3.0.2-SNAPSHOT
+    image: openlmis/notification:3.0.1
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -73,7 +73,7 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:3.1.0-SNAPSHOT
+    image: openlmis/fulfillment:3.0.3
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -84,7 +84,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:1.0.0-BETA-SNAPSHOT
+    image: openlmis/stockmanagement:1.0.0-BETA
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
