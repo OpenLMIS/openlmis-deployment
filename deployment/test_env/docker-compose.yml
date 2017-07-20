@@ -9,7 +9,7 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
-      
+
   nginx:
     image: openlmis/nginx:3
     ports:
@@ -73,7 +73,7 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:5.0.0-SNAPSHOT
+    image: openlmis/fulfillment:5.0.1-SNAPSHOT
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
