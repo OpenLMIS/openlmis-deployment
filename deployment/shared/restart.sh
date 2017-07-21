@@ -3,6 +3,7 @@
 WIPE_MSG="Will WIPE data!"
 KEEP_MSG="Will keep data."
 
+/usr/local/bin/docker-compose kill
 /usr/local/bin/docker-compose down
 
 if [ "$KEEP_OR_WIPE" == "wipe" ]; then
