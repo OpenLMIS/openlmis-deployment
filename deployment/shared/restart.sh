@@ -12,6 +12,6 @@ if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   /usr/local/bin/docker-compose up --build --force-recreate -d
 else
   echo "$KEEP_MSG";
-  export spring_profiles_active="production"
+  export spring_profiles_active="production,demo-data"
   /usr/local/bin/docker-compose up --build --force-recreate -d
 fi
