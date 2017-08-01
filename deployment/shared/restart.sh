@@ -8,7 +8,7 @@ KEEP_MSG="Will keep data."
 
 if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "$WIPE_MSG"
-  unset spring_profiles_active
+  export spring_profiles_active="demo-data"
   /usr/local/bin/docker-compose up --build --force-recreate -d
 else
   echo "$KEEP_MSG";
