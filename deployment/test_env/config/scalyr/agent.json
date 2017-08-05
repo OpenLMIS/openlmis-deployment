@@ -24,7 +24,7 @@
      { path: "/var/log/nginx/log/access.log", attributes: {parser: "accessLog"} },
      { path: "/var/log/nginx/log/error.log" } ,
      { path: "/var/log/auth-tomcat/access_log.log", attributes: {parser: "accessLog"} },
-     { path: "/var/log/messages" },
+     { path: "/var/log/messages", attributes: {parser: "systemLog"} },
   ],
 
   global_monitor_sample_interval: "5",
