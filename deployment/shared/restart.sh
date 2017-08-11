@@ -8,10 +8,10 @@ KEEP_MSG="Will keep data."
 
 if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "$WIPE_MSG"
-  export spring_profiles_active="demo-data,generate-right-assignments"
+  export spring_profiles_active="demo-data,refresh-db"
   /usr/local/bin/docker-compose up --build --force-recreate -d
 else
   echo "$KEEP_MSG";
-  export spring_profiles_active="production,demo-data,generate-right-assignments"
+  export spring_profiles_active="production,demo-data"
   /usr/local/bin/docker-compose up --build --force-recreate -d
 fi
