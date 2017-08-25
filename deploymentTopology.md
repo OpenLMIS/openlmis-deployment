@@ -35,6 +35,9 @@ actively used for more than half the day):
 at minimum.
 * Amazon SES with either the domain (w/DKIM) verified or a specific from-address
 
-For more information on setting this up, see the [Provisioning](provision/Provision-single-host.md) section and also follow the
-link for backing up/restoring [RDS](deployment#using-amazons-rds). For more information on how to
-configure your RDS please visit [RDS configuration](provision/RDS-configuration.md) page.
+For more information on setting this up, see the 
+[Provisioning](https://github.com/OpenLMIS/openlmis-deployment/blob/master/provision/Provision-single-host.md) section and also follow
+the link for backing up/restoring 
+[RDS](https://github.com/OpenLMIS/openlmis-deployment/blob/master/deployment/README.md#using-amazons-rds). For more information on how
+to configure your RDS please visit 
+[RDS configuration](https://github.com/OpenLMIS/openlmis-deployment/blob/master/provision/RDS-configuration.md) page.
