@@ -107,7 +107,7 @@ services:
 
   report:
     restart: always
-    image: openlmis/report:1.0.0-SNAPSHOT
+    image: openlmis/report:1.0.0-beta
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
