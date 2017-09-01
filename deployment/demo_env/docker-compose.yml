@@ -23,16 +23,16 @@ services:
     depends_on: [consul]
 
   reference-ui:
-    image: openlmis/reference-ui:5.0.2
+    image: openlmis/reference-ui:5.0.3
     env_file: .env
     depends_on: [consul]
 
   requisition:
     restart: always
-    image: openlmis/requisition:4.0.0
+    image: openlmis/requisition:5.0.0
     env_file: .env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
@@ -40,10 +40,10 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:7.0.0
+    image: openlmis/referencedata:8.0.0
     env_file: .env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
@@ -51,18 +51,19 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:3.0.3
+    image: openlmis/auth:3.1.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
+      - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
 
   notification:
     restart: always
-    image: openlmis/notification:3.0.2
+    image: openlmis/notification:3.0.3
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -73,7 +74,18 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:4.0.0
+    image: openlmis/fulfillment:6.0.0
+    env_file: .env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+
+  cce:
+    restart: always
+    image: openlmis/cce:1.0.0-beta
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -84,7 +96,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:1.0.0-BETA
+    image: openlmis/stockmanagement:1.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -92,6 +104,18 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+
+  report:
+    restart: always
+    image: openlmis/report:1.0.0-beta
+    env_file: .env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+
 
   log:
     restart: always
@@ -111,6 +135,7 @@ services:
       - '/run/docker.sock:/var/scalyr/docker.sock'
       - 'syslog:/var/log'
       - 'nginx-log:/var/log/nginx/log'
+      - 'auth-tomcat-log:/var/log/auth-tomcat'
 
   service-configuration:
     build:
@@ -130,6 +155,8 @@ volumes:
   syslog:
     external: false
   nginx-log:
+    external: false
+  auth-tomcat-log:
     external: false
   consul-template-log:
     external: false
