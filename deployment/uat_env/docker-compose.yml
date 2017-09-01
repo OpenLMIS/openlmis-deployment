@@ -29,7 +29,7 @@ services:
 
   requisition:
     restart: always
-    image: openlmis/requisition:5.0.0-SNAPSHOT
+    image: openlmis/requisition:5.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
