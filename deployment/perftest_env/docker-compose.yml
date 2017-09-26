@@ -32,7 +32,7 @@ services:
     image: openlmis/requisition:5.0.1-SNAPSHOT
     env_file: .env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active},performance-data
     volumes:
       - 'service-config:/config'
