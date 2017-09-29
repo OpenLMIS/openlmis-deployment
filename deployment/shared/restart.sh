@@ -11,11 +11,11 @@ if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "$WIPE_MSG"
   export spring_profiles_active="demo-data,refresh-db"
   /usr/local/bin/docker-compose up --build --force-recreate -d
-else if [ "$KEEP_OR_WIPE" == "keep" ]; then
-  echo "$KEEP_MSG";
+elif [ "$KEEP_OR_WIPE" == "keep" ]; then
+  echo "$KEEP_MSG"
   export spring_profiles_active="production,demo-data"
   /usr/local/bin/docker-compose up --build --force-recreate -d
 else
-  echo "$USE_ENV_MSG";
+  echo "$USE_ENV_MSG"
   /usr/local/bin/docker-compose up --build --force-recreate -d
 fi
