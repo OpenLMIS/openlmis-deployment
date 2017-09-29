@@ -33,7 +33,7 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active},performance-data
+      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
@@ -44,7 +44,7 @@ services:
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active},performance-data
+      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
