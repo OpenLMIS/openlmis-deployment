@@ -5,7 +5,7 @@ KEEP_MSG="Will keep data."
 USE_ENV_MSG="Will use whatever is in the env file."
 
 /usr/local/bin/docker-compose kill
-/usr/local/bin/docker-compose down
+/usr/local/bin/docker-compose down -v
 
 if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "$WIPE_MSG"
