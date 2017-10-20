@@ -22,12 +22,15 @@ if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   PROFILES="${PROFILES//production}"
 elif [ "$KEEP_OR_WIPE" == "keep" ]; then
   echo "$KEEP_MSG"
+  PROFILES="${PROFILES//demo-data}"
+  PROFILES="${PROFILES//performance-data}"
   if [[ $PROFILES != *"production"* ]]; then
     PROFILES="$PROFILES,production"
   fi
 else
   echo "$USE_ENV_MSG"
 fi
+PROFILES=`echo $PROFILES | sed -e s/^,*//` # strip any leading commas
 export spring_profiles_active=$PROFILES
 echo "Profiles to use: $spring_profiles_active"
 
