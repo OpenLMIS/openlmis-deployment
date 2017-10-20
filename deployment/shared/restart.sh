@@ -10,12 +10,11 @@ USE_ENV_MSG="Will use whatever is in the env file."
 /usr/local/bin/docker-compose kill
 /usr/local/bin/docker-compose down -v
 
-# source the env file as we want to know the spring profiles
-source .env
-: "${spring_profiles_active:?Need to set spring_profiles_active}"
+# get spring_profiles_active from env file
+PROFILES=`cat .env | grep -v '^#' | grep spring_profiles_active | sed -e s/.*=//`
+: "${PROFILES:?Need to set spring_profiles_active - could not parse}"
 
 # based on KEEP_OR_WIPE we do/don't change the profiles set
-PROFILES=$spring_profiles_active
 echo "Profiles read from env: $PROFILES"
 if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "$WIPE_MSG"
