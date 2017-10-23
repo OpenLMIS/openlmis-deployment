@@ -9,8 +9,8 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 if [ ! -z "$ENV_RESTORE_SNAPSHOT" ]; then
   export KEEP_OR_WIPE="use_env"
   cp .deployment-config/$ENV_RESTORE_SNAPSHOT .env
-  /usr/local/bin/docker-compose --rm openlmis/restore-snapshot
-  /usr/local/bin/docker-compose --rm openlmis/obscure-data
+  /usr/local/bin/docker run --rm --env-file .env openlmis/restore-snapshot
+  /usr/local/bin/docker run --rm --env-file .env openlmis/obscure-data
 else
   cp .deployment-config/perftest.env .env
 fi
