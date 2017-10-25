@@ -10,9 +10,9 @@ if [ ! -z "$ENV_RESTORE_SNAPSHOT" ]; then
   export KEEP_OR_WIPE="use_env"
   cp .deployment-config/$ENV_RESTORE_SNAPSHOT .env
   docker pull openlmis/restore-snapshot
-  sleep 600
   docker pull openlmis/obscure-data
   /usr/bin/docker run --rm --env-file .env openlmis/restore-snapshot
+  sleep 300
   /usr/bin/docker run --rm --env-file .env openlmis/obscure-data
 else
   cp .deployment-config/perftest.env .env
