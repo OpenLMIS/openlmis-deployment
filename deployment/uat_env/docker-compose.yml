@@ -23,13 +23,13 @@ services:
     depends_on: [consul]
 
   reference-ui:
-    image: openlmis/reference-ui:5.0.4-RC1
+    image: openlmis/reference-ui:5.0.4-RC2
     env_file: .env
     depends_on: [consul]
 
   requisition:
     restart: always
-    image: openlmis/requisition:5.1.0-RC1
+    image: openlmis/requisition:5.1.0-RC2
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -40,7 +40,7 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:9.0.0-RC1
+    image: openlmis/referencedata:9.0.0-RC2
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
@@ -85,7 +85,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:2.0.0-RC1
+    image: openlmis/stockmanagement:2.0.0-RC2
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
