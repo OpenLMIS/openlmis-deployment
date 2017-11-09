@@ -85,7 +85,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:2.0.0-RC2
+    image: openlmis/stockmanagement:2.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
