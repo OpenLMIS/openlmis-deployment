@@ -51,7 +51,7 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:3.1.1-SNAPSHOT
+    image: openlmis/auth:3.1.2-SNAPSHOT
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration'
@@ -63,7 +63,7 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification:3.0.4-SNAPSHOT
+    image: openlmis/notification:3.0.5-SNAPSHOT
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -74,7 +74,7 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:6.1.0-SNAPSHOT
+    image: openlmis/fulfillment:6.1.1-SNAPSHOT
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration'
