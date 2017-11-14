@@ -85,7 +85,7 @@ services:
 
   cce:
     restart: always
-    image: openlmis/cce:1.0.0-SNAPSHOT
+    image: openlmis/cce:1.0.1-SNAPSHOT
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
