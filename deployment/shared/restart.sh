@@ -11,7 +11,7 @@ USE_ENV_MSG="Will use whatever is in the env file."
 /usr/local/bin/docker-compose down -v
 
 # get spring_profiles_active from env file
-PROFILES=`cat .env | grep -v '^#' | grep spring_profiles_active | sed -e s/.*=//`
+PROFILES=`cat .env settings.env | grep -v '^#' | grep spring_profiles_active | sed -e s/.*=//`
 : "${PROFILES:?Need to set spring_profiles_active - could not parse}"
 
 # based on KEEP_OR_WIPE we do/don't change the profiles set
