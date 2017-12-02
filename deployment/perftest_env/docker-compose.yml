@@ -11,10 +11,10 @@ services:
       - "53"
 
   nginx:
-    image: openlmis/nginx:4
+    image: openlmis/nginx:${OL_NGINX_VERSION}
     ports:
       - "80:80"
-    env_file: .env
+    env_file: settings.env
     environment:
       NGINX_LOG_DIR: '/var/log/nginx/log'
     volumes:
@@ -23,14 +23,14 @@ services:
     depends_on: [consul]
 
   reference-ui:
-    image: openlmis/reference-ui:5.0.5-SNAPSHOT
-    env_file: .env
+    image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
+    env_file: settings.env
     depends_on: [consul]
 
   requisition:
     restart: always
-    image: openlmis/requisition:5.1.1-SNAPSHOT
-    env_file: .env
+    image: openlmis/requisition:${OL_REQUISITION_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
@@ -40,8 +40,8 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:10.0.0-SNAPSHOT
-    env_file: .env
+    image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
@@ -51,8 +51,8 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:3.1.2-SNAPSHOT
-    env_file: .env
+    image: openlmis/auth:${OL_AUTH_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
@@ -63,8 +63,8 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification:3.0.5-SNAPSHOT
-    env_file: .env
+    image: openlmis/notification:${OL_NOTIFICATION_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
@@ -74,8 +74,8 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:7.0.0-SNAPSHOT
-    env_file: .env
+    image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
@@ -85,8 +85,8 @@ services:
 
   cce:
     restart: always
-    image: openlmis/cce:1.0.0-SNAPSHOT
-    env_file: .env
+    image: openlmis/cce:${OL_CCE_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
@@ -96,8 +96,8 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:3.0.0-SNAPSHOT
-    env_file: .env
+    image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
@@ -107,8 +107,8 @@ services:
 
   report:
     restart: always
-    image: openlmis/report:1.0.1-SNAPSHOT
-    env_file: .env
+    image: openlmis/report:${OL_REPORT_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
@@ -118,8 +118,8 @@ services:
     
   diagnostics:
     restart: always
-    image: openlmis/diagnostics:1.0.0-SNAPSHOT
-    env_file: .env
+    image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
+    env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
@@ -130,7 +130,7 @@ services:
 
   log:
     restart: always
-    image: openlmis/rsyslog:1
+    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
     volumes:
       - 'syslog:/var/log'
     depends_on:
@@ -140,7 +140,7 @@ services:
   scalyr:
     image: openlmis/scalyr
     container_name: scalyr-agent
-    env_file: .env
+    env_file: settings.env
     volumes:
       - 'service-config:/config'
       - '/run/docker.sock:/var/scalyr/docker.sock'
@@ -159,7 +159,7 @@ services:
     ports:
       - "21:21"
       - "20:20"
-    env_file: .env
+    env_file: settings.env
     depends_on: [consul]
 
 volumes:
