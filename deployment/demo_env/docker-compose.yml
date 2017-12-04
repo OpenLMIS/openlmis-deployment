@@ -23,13 +23,13 @@ services:
     depends_on: [consul]
 
   reference-ui:
-    image: openlmis/reference-ui:5.0.3
+    image: openlmis/reference-ui:5.0.4
     env_file: .env
     depends_on: [consul]
 
   requisition:
     restart: always
-    image: openlmis/requisition:5.0.0
+    image: openlmis/requisition:5.1.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -40,7 +40,7 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:8.0.0
+    image: openlmis/referencedata:9.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
@@ -51,7 +51,7 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:3.1.0
+    image: openlmis/auth:3.1.1
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -63,7 +63,7 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification:3.0.3
+    image: openlmis/notification:3.0.4
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -74,7 +74,7 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:6.0.0
+    image: openlmis/fulfillment:6.1.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -96,7 +96,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:1.0.0
+    image: openlmis/stockmanagement:2.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
@@ -107,7 +107,7 @@ services:
 
   report:
     restart: always
-    image: openlmis/report:1.0.0-beta
+    image: openlmis/report:1.0.0
     env_file: .env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
