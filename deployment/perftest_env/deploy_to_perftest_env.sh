@@ -8,14 +8,14 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 
 if [ ! -z "$ENV_RESTORE_SNAPSHOT" ]; then
   export KEEP_OR_WIPE="use_env"
-  cp .deployment-config/$ENV_RESTORE_SNAPSHOT .env
+  cp .deployment-config/$ENV_RESTORE_SNAPSHOT settings.env
   docker pull openlmis/restore-snapshot
   docker pull openlmis/obscure-data
-  /usr/bin/docker run --rm --env-file .env openlmis/restore-snapshot
+  /usr/bin/docker run --rm --env-file settings.env openlmis/restore-snapshot
   sleep 300
-  /usr/bin/docker run --rm --env-file .env openlmis/obscure-data
+  /usr/bin/docker run --rm --env-file settings.env openlmis/obscure-data
 else
-  cp .deployment-config/perftest.env .env
+  cp .deployment-config/perftest.env settings.env
 fi
 
 ../shared/pull_images.sh $1
