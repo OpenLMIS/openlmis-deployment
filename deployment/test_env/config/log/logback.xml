@@ -35,7 +35,7 @@
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.requisition" level="DEBUG" additivity="false">
+    <logger name="org.openlmis.requisition" level="TRACE" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
