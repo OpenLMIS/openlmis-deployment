@@ -12,6 +12,7 @@ if [ ! -z "$ENV_RESTORE_SNAPSHOT" ]; then
   docker pull openlmis/restore-snapshot
   docker pull openlmis/obscure-data
   /usr/bin/docker run --rm --env-file settings.env openlmis/restore-snapshot
+  sleep 300
 else
   cp .deployment-config/uat2.env settings.env
 fi
