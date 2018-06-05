@@ -100,7 +100,7 @@ services:
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: production
+      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
@@ -126,11 +126,6 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
-
-  demo-data:
-    image: openlmis/demo-data
-    env_file: settings.env
-    command: ["/wait-for-postgres.sh", "/load.sh"]
 
 
   log:
