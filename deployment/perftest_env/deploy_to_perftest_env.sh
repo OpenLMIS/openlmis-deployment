@@ -20,4 +20,9 @@ fi
 
 ../shared/pull_images.sh $1
 
+../shared/clean_schema.sh $1
+
+docker pull openlmis/demo-data
+/usr/bin/docker run --rm --env-file settings.env openlmis/demo-data
+
 ../shared/restart.sh $1
