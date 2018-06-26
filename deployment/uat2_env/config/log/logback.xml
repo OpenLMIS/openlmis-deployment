@@ -31,10 +31,6 @@
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.referencedata.web.OrderableController" level="TRACE" additivity="false">
-        <appender-ref ref="SYSLOG"/>
-    </logger>
-    
     <logger name="org.openlmis.report" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
