@@ -1,21 +1,26 @@
 version: "3.3"
 
 services:
-  scalyr:
-    image: scalyr/scalyr-docker-agent:${OL_SCALYR_AGENT_VERSION}
+  shared-configuration:
+    build:
+      context: ./config
     volumes:
-      - ./config/scalyr/agent.d:/etc/scalyr-agent-2/agent.d
+      - shared-config:/config
+
+  scalyr:
+    image: openlmis/scalyr:${OL_SCALYR_AGENT_VERSION}
+    volumes:
+      - shared-config:/config
       - ${SCALYR_DOCKER_SOCK}:/var/scalyr/docker.sock
-      - syslog:/var/log
+      - syslog:/var/log/nifi-registry
+    env_file: settings.env
     environment:
-      - SCALYR_API_KEY=${SCALYR_API_KEY}
-      - SCALYR_HOSTNAME=${SCALYR_HOSTNAME}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
 
   log:
     image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
     volumes:
       - syslog:/var/log
-      - ./config/rsyslog/rsyslog.d:/etc/rsyslog.d
     ports:
       - "${SYSLOG_UDP_PORT}:514/udp"
 
@@ -32,4 +37,6 @@ services:
 
 volumes:
   syslog:
+    external: false
+  shared-config:
     external: false

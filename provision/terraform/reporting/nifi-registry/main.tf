@@ -24,4 +24,11 @@ module "nifi-registry" {
   nr-subnet-id = "${var.nr-subnet-id}"
   nr-ami = "${var.nr-ami}"
   nr-vpc-name = "${var.nr-vpc-name}"
+  nr-instance-group = "${var.nr-instance-group}"
+  nr-instance-ssh-user = "${var.nr-instance-ssh-user}"
+  docker-ansible-dir = "${var.docker-ansible-dir}"
+  nr-dns-name = "${var.nr-dns-name}"
+  nr-tls-s3-access-key-id = "${var.nr-tls-s3-access-key-id}"
+  nr-tls-s3-secret-access-key = "${var.nr-tls-s3-secret-access-key}"
+  docker-https-port = "${var.docker-https-port}"
 }

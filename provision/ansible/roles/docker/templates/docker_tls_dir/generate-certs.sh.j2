@@ -1,0 +1,60 @@
+#!/bin/bash
+
+export WORKING_DIR="{{ docker_tls_dir }}"
+export CA_CERT_FILE=${WORKING_DIR}/ca/cert.pem
+export CA_KEY_FILE=${WORKING_DIR}/ca/key.pem
+export CA_PASS_FILE=${WORKING_DIR}/ca/passphrase.txt
+
+gen-ca() {
+    local keySize=$1
+    local expiryDays=$2
+
+    mkdir -p `dirname ${CA_CERT_FILE}`
+    mkdir -p `dirname ${CA_KEY_FILE}`
+    mkdir -p `dirname ${CA_PASS_FILE}`
+    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 > ${CA_PASS_FILE}
+    openssl genrsa -aes256 -out ${CA_KEY_FILE} -passout file://${CA_PASS_FILE} ${keySize}
+    openssl req -new -x509 -days ${expiryDays} -key ${CA_KEY_FILE} -sha256 -out ${CA_CERT_FILE} -passin file://${CA_PASS_FILE} -subj "{{ docker_tls_ca_subject }}"
+}
+
+gen-server() {
+    local workingDir=${WORKING_DIR}/server
+    local dnsName=$1
+    local ipAddress=$2
+    local keySize=$3
+    local expiryDays=$4
+
+    mkdir -p ${workingDir}
+    openssl genrsa -out ${workingDir}/key.pem ${keySize}
+    openssl req -subj "/CN=${dnsName}" -sha256 -new -key ${workingDir}/key.pem -out ${workingDir}/server.csr
+    echo subjectAltName = DNS:${dnsName},IP:${ipAddress},IP:127.0.0.1 >> ${workingDir}/server.cnf
+    echo extendedKeyUsage = serverAuth >> ${workingDir}/server.cnf
+    openssl x509 -req -days ${expiryDays} -sha256 -in ${workingDir}/server.csr -passin file://${CA_PASS_FILE} -CA ${CA_CERT_FILE} -CAkey ${CA_KEY_FILE} -CAcreateserial -out ${workingDir}/cert.pem -extfile ${workingDir}/server.cnf
+}
+
+gen-client() {
+    local workingDir=${WORKING_DIR}/client
+    local keySize=$1
+    local expiryDays=$2
+
+    mkdir -p ${workingDir}
+    openssl genrsa -out ${workingDir}/key.pem ${keySize}
+    openssl req -subj '/CN=client' -new -key ${workingDir}/key.pem -out ${workingDir}/client.csr
+    echo extendedKeyUsage = clientAuth >> ${workingDir}/client.cnf
+    openssl x509 -req -days ${expiryDays} -sha256 -in ${workingDir}/client.csr -passin file://${CA_PASS_FILE} -CA ${CA_CERT_FILE} -CAkey ${CA_KEY_FILE} -CAcreateserial -out ${workingDir}/cert.pem -extfile ${workingDir}/client.cnf
+}
+
+send-s3() {
+    local bucketName=$1
+
+    export AWS_ACCESS_KEY_ID=$2
+    export AWS_SECRET_ACCESS_KEY=$3
+    aws s3 cp --recursive ${WORKING_DIR} s3://${bucketName}/{{ docker_tls_s3_bucket_dir }}
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+}
+
+gen-ca "{{ docker_tls_key_size }}" "{{ docker_tls_expiry_days }}"
+gen-server "{{ docker_tls_dns_name }}" "{{ docker_dockerd_bind_address }}" "{{ docker_tls_key_size }}" "{{ docker_tls_expiry_days }}"
+gen-client "{{ docker_tls_key_size }}" "{{ docker_tls_expiry_days }}"
+send-s3 "{{ docker_tls_s3_bucket }}" "$@"

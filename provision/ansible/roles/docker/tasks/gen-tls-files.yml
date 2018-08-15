@@ -1,0 +1,20 @@
+---
+- name: Test to see if certificates already generated
+  stat:
+    path: "{{ docker_tls_dir }}/server/cert.pem"
+  register: server_cert_file
+
+- block: 
+  - name: Copy the TLS generation script
+    template:
+      src: docker_tls_dir/generate-certs.sh.j2
+      dest: "{{ docker_tls_dir }}/generate-certs.sh"
+      owner: root
+      group: root
+      mode: 0750
+
+  - name: Generate the TLS files
+    command: './generate-certs.sh "{{ docker_tls_aws_access_key_id }}" "{{ docker_tls_aws_secret_access_key }}"'
+    args:
+      chdir: "{{ docker_tls_dir }}/"
+  when: server_cert_file.stat.exists == False or docker_tls_force_recreate == True

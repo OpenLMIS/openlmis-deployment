@@ -1,5 +1,0 @@
-{
-  logs: [
-    { path: "/var/log/messages", attributes: {parser: "systemLog"}}
-  ]
-}

@@ -1,0 +1,9 @@
+---
+- hosts: docker-hosts
+  gather_facts: False
+  become: yes
+  pre_tasks:
+    - include_tasks: tasks/python2-ubuntu.yml
+    - setup:
+  roles:
+    - role: docker

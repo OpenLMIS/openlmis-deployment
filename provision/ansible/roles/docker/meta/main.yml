@@ -1,0 +1,16 @@
+galaxy_info:
+  author: OpenLMIS
+  company: OpenLMIS
+  description: Installs and configures Docker
+  min_ansible_version: 2.4
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+    - bionic
+
+dependencies:
+ - role: geerlingguy.docker
+   become: true
+   tags:
+    - install

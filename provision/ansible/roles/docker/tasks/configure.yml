@@ -1,0 +1,32 @@
+---
+- block:
+  - name: Make sure the TLS directory exists
+    file:
+      path: "{{ docker_tls_dir }}"
+      state: directory
+      owner: root
+      group: root
+      mode: 0750
+      recurse: yes
+
+  - include_tasks: gen-tls-files.yml
+
+  - name: Make sure the Systemd docker directory exists
+    file:
+      path: "/etc/systemd/system/{{ docker_systemd_service_name }}.d"
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+      recurse: yes
+
+  - name: Copy the Docker service override file
+    template:
+      src: "etc/systemd/system/docker_systemd_service_name.d/override.conf.j2"
+      dest: "/etc/systemd/system/{{ docker_systemd_service_name }}.d/override.conf"
+      owner: root
+      group: root
+      mode: 0755
+    notify:
+      - "restart {{ docker_systemd_service_name }}"
+  when: docker_dockerd_enable_tls == True

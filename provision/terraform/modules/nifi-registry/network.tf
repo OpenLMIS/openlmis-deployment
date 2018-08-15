@@ -24,6 +24,13 @@ resource "aws_security_group" "nifi-registry" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = "${var.docker-https-port}"
+    to_port     = "${var.docker-https-port}"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 65535
@@ -43,4 +50,9 @@ resource "aws_security_group" "nifi-registry" {
     BillTo = "${var.bill-to}"
     Type   = "${var.env}"
   }
+}
+
+resource "aws_eip" "nifi-registry" {
+  instance = "${aws_instance.nifi-registry.id}"
+  vpc = true
 }

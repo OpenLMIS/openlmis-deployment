@@ -1,0 +1,10 @@
+docker_compose_version: "1.22.0"
+docker_users:
+  - "{{ ansible_ssh_user }}"
+docker_tls_ca_country: "US"
+docker_tls_ca_province: "Washington"
+docker_tls_ca_locality: "Seatle"
+docker_tls_ca_org: "OpenLMIS"
+docker_tls_ca_org_unit: "Docker"
+docker_tls_ca_email_address: "info@openlmis.org"
+docker_tls_s3_bucket: "aws-instance-keys"
