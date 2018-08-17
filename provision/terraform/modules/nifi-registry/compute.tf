@@ -12,10 +12,10 @@ resource "aws_instance" "nifi-registry" {
   }
 
   tags {
-    Name   = "${var.nr-name}-${var.env}"
-    BillTo = "${var.bill-to}"
-    Type   = "${var.env}"
-    DeployGroup  = "${var.nr-instance-group}"
+    Name        = "${var.nr-name}-${var.env}"
+    BillTo      = "${var.bill-to}"
+    Type        = "${var.env}"
+    DeployGroup = "${var.nr-instance-group}"
   }
 
   volume_tags {
@@ -41,9 +41,11 @@ resource "null_resource" "deploy-docker" {
       user = "${var.nr-instance-ssh-user}"
     }
   }
+
   provisioner "local-exec" {
     command = "cd ${var.docker-ansible-dir} && mkdir -p vendor/roles && ansible-galaxy install -p vendor/roles -r requirements/galaxy.yml"
   }
+
   provisioner "local-exec" {
     command = "cd ${var.docker-ansible-dir} && ansible-playbook -vvvv -i inventory docker.yml -e docker_dockerd_tls_port=${var.docker-https-port} -e docker_tls_aws_access_key_id=\"${var.nr-tls-s3-access-key-id}\" -e docker_tls_aws_secret_access_key=\"${var.nr-tls-s3-secret-access-key}\" -e docker_tls_dns_name=${var.nr-dns-name} -e ansible_ssh_user=${var.nr-instance-ssh-user}  --limit ${aws_instance.nifi-registry.public_ip}"
   }

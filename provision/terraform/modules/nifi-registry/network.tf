@@ -54,5 +54,5 @@ resource "aws_security_group" "nifi-registry" {
 
 resource "aws_eip" "nifi-registry" {
   instance = "${aws_instance.nifi-registry.id}"
-  vpc = true
+  vpc      = true
 }

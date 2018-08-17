@@ -37,43 +37,53 @@ variable "nr-https-port" {
   type        = "string"
   description = "The HTTPS port NiFi Registry runs on"
 }
+
 variable "nr-subnet-id" {
-  type = "string"
+  type        = "string"
   description = "ID of sububnet the NiFi Registry host should be in"
 }
+
 variable "nr-ami" {
-  type = "string"
+  type        = "string"
   description = "The AMI to use with the NiFi Registry instance"
 }
+
 variable "nr-vpc-name" {
-  type = "string"
+  type        = "string"
   description = "The name of the VPC to place NiFi Registry resources on AWS"
 }
+
 variable "nr-instance-group" {
-  type = "string"
+  type        = "string"
   description = "The deployment group to place the NiFi Registry host. Will dictate what Ansible playbooks can ran on it"
 }
+
 variable "nr-instance-ssh-user" {
-  type = "string"
+  type        = "string"
   description = "The name of the user to connect as in the NiFi Registry host"
 }
+
 variable "docker-ansible-dir" {
-  type = "string"
+  type        = "string"
   description = "The path to the directory containing the playbook for installing docker"
 }
+
 variable "nr-dns-name" {
-  type = "string"
+  type        = "string"
   description = "The DNS name associated to NiFi Registry"
 }
+
 variable "nr-tls-s3-access-key-id" {
-  type = "string"
+  type        = "string"
   description = "The AWS access key ID to use to backup generated Docker TLS files"
 }
+
 variable "nr-tls-s3-secret-access-key" {
-  type = "string"
+  type        = "string"
   description = "The AWS secrect access key to use to backup generated Docker TLS files"
 }
+
 variable "docker-https-port" {
-  type = "string"
+  type        = "string"
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
 }
