@@ -13,7 +13,7 @@ variable "docker-ansible-dir" {
   description = "The path to the directory containing the playbook for installing docker"
 }
 
-variable "docker-https-port" {
+variable "docker-tls-port" {
   type        = "string"
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
 }

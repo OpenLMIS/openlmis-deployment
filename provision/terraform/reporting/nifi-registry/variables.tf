@@ -83,7 +83,7 @@ variable "nr-tls-s3-secret-access-key" {
   description = "The AWS secrect access key to use to backup generated Docker TLS files"
 }
 
-variable "docker-https-port" {
+variable "docker-tls-port" {
   type        = "string"
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
 }

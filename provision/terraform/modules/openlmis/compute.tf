@@ -45,6 +45,6 @@ resource "null_resource" "deploy-docker" {
   }
 
   provisioner "local-exec" {
-    command = "cd ${var.docker-ansible-dir} && ansible-playbook -vvvv -i inventory docker.yml -e docker_dockerd_tls_port=${var.docker-https-port} -e docker_tls_aws_access_key_id=\"${var.app-tls-s3-access-key-id}\" -e docker_tls_aws_secret_access_key=\"${var.app-tls-s3-secret-access-key}\" -e docker_tls_dns_name=${var.app-dns-name} -e ansible_ssh_user=${var.app-instance-ssh-user}  --limit ${aws_instance.app.public_ip}"
+    command = "cd ${var.docker-ansible-dir} && ansible-playbook -vvvv -i inventory docker.yml -e docker_dockerd_tls_port=${var.docker-tls-port} -e docker_tls_aws_access_key_id=\"${var.app-tls-s3-access-key-id}\" -e docker_tls_aws_secret_access_key=\"${var.app-tls-s3-secret-access-key}\" -e docker_tls_dns_name=${var.app-dns-name} -e ansible_ssh_user=${var.app-instance-ssh-user}  --limit ${aws_instance.app.public_ip}"
   }
 }

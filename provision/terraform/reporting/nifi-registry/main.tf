@@ -30,5 +30,5 @@ module "nifi-registry" {
   nr-dns-name                 = "${var.nr-dns-name}"
   nr-tls-s3-access-key-id     = "${var.nr-tls-s3-access-key-id}"
   nr-tls-s3-secret-access-key = "${var.nr-tls-s3-secret-access-key}"
-  docker-https-port           = "${var.docker-https-port}"
+  docker-tls-port             = "${var.docker-tls-port}"
 }

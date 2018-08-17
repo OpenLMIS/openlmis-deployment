@@ -25,8 +25,8 @@ resource "aws_security_group" "nifi-registry" {
   }
 
   ingress {
-    from_port   = "${var.docker-https-port}"
-    to_port     = "${var.docker-https-port}"
+    from_port   = "${var.docker-tls-port}"
+    to_port     = "${var.docker-tls-port}"
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
