@@ -9,7 +9,7 @@
       mode: 0750
       recurse: yes
 
-  - include_tasks: gen-tls-files.yml
+  - import_tasks: gen-tls-files.yml
 
   - name: Make sure the Systemd docker directory exists
     file:

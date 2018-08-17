@@ -4,17 +4,135 @@
     path: "{{ docker_tls_dir }}/server/cert.pem"
   register: server_cert_file
 
-- block: 
-  - name: Copy the TLS generation script
+- block:
+  - name: Delete the CA directory
+    file:
+      path: "{{ docker_tls_dir }}/ca"
+      state: absent
+
+  - name: Make sure the CA dir exists
+    file:
+      path: "{{ docker_tls_dir }}/ca"
+      state: directory
+      recurse: yes
+      owner: root
+      group: root
+      mode: 0750
+  
+  - name: Generate the TLS CA key passphrase
+    command: "openssl rand -base64 32"
+    register: _docker_tls_ca_passphrase
+
+  - name: Extract the TLS CA key passphrase
+    set_fact:
+      docker_tls_ca_passphrase: "{{ _docker_tls_ca_passphrase.stdout }}"
+
+  - name: Copy over the TLS CA key passphrase file
     template:
-      src: docker_tls_dir/generate-certs.sh.j2
-      dest: "{{ docker_tls_dir }}/generate-certs.sh"
+      src: "docker_tls_dir/ca/passphrase.txt.j2"
+      dest: "{{ docker_tls_dir }}/ca/passphrase.txt"
+      owner: root
+      group: root
+      mode: 0600
+
+  - name: Generate the TLS CA key
+    openssl_privatekey:
+      path: "{{ docker_tls_dir }}/ca/key.pem"
+      passphrase: "{{ docker_tls_ca_passphrase }}"
+      cipher: aes256
+      size: "{{ docker_tls_key_size }}"
+      type: RSA
+
+  - name: Generate the TLS CA certificate
+    command: 'openssl req -new -x509 -days {{ docker_tls_expiry_days }} -key "{{ docker_tls_dir }}/ca/key.pem" -sha256 -out "{{ docker_tls_dir }}/ca/cert.pem" -passin "file://{{ docker_tls_dir }}/ca/passphrase.txt" -subj "{{ docker_tls_ca_subject }}"'
+    notify:
+      - "restart {{ docker_systemd_service_name }}"
+
+  - name: Delete the TLS server directory
+    file:
+      path: "{{ docker_tls_dir }}/server"
+      state: absent
+
+  - name: Make sure the TLS server dir exists
+    file:
+      path: "{{ docker_tls_dir }}/server"
+      state: directory
+      recurse: yes
       owner: root
       group: root
       mode: 0750
 
-  - name: Generate the TLS files
-    command: './generate-certs.sh "{{ docker_tls_aws_access_key_id }}" "{{ docker_tls_aws_secret_access_key }}"'
-    args:
-      chdir: "{{ docker_tls_dir }}/"
-  when: server_cert_file.stat.exists == False or docker_tls_force_recreate == True
+  - name: Generate the TLS server Key
+    openssl_privatekey:
+      path: "{{ docker_tls_dir }}/server/key.pem"
+      size: "{{ docker_tls_key_size }}"
+      type: RSA
+    notify:
+      - "restart {{ docker_systemd_service_name }}"
+
+  - name: Generate the TLS server CSR
+    openssl_csr:
+      path: "{{ docker_tls_dir }}/server/server.csr"
+      privatekey_path: "{{ docker_tls_dir }}/server/key.pem"
+      common_name: "{{ docker_tls_dns_name }}"
+      digest: sha256
+  
+  - name: Copy over the TLS server CNF
+    template:
+      src: "docker_tls_dir/server/server.cnf.j2"
+      dest: "{{ docker_tls_dir }}/server/server.cnf"
+      owner: root
+      group: root
+      mode: 0640
+  
+  - name: Generate the TLS server certificate
+    command: 'openssl x509 -req -days {{ docker_tls_expiry_days }} -sha256 -in "{{ docker_tls_dir }}/server/server.csr" -passin "file://{{ docker_tls_dir }}/ca/passphrase.txt" -CA "{{ docker_tls_dir }}/ca/cert.pem" -CAkey "{{ docker_tls_dir }}/ca/key.pem" -CAcreateserial -out "{{ docker_tls_dir }}/server/cert.pem" -extfile "{{ docker_tls_dir }}/server/server.cnf"'
+    notify:
+      - "restart {{ docker_systemd_service_name }}"
+
+  - name: Delete the TLS {{ docker_tls_client_name }} directory
+    file:
+      path: "{{ docker_tls_dir }}/{{ docker_tls_client_name }}"
+      state: absent
+
+  - name: Make sure the TLS {{ docker_tls_client_name }} dir exists
+    file:
+      path: "{{ docker_tls_dir }}/{{ docker_tls_client_name }}"
+      state: directory
+      recurse: yes
+      owner: root
+      group: root
+      mode: 0750
+
+  - name: Generate the TLS {{ docker_tls_client_name }} Key
+    openssl_privatekey:
+      path: "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/key.pem"
+      size: "{{ docker_tls_key_size }}"
+      type: RSA
+
+  - name: Generate the TLS {{ docker_tls_client_name }} CSR
+    openssl_csr:
+      path: "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/{{ docker_tls_client_name }}.csr"
+      privatekey_path: "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/key.pem"
+      common_name: "{{ docker_tls_dns_name }}"
+      digest: sha256
+  
+  - name: Copy over the TLS {{ docker_tls_client_name }} CNF
+    template:
+      src: "docker_tls_dir/docker_tls_client_name/docker_tls_client_name.cnf.j2"
+      dest: "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/{{ docker_tls_client_name }}.cnf"
+      owner: root
+      group: root
+      mode: 0640
+  
+  - name: Generate the TLS {{ docker_tls_client_name }} certificate
+    command: 'openssl x509 -req -days {{ docker_tls_expiry_days }} -sha256 -in "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/{{ docker_tls_client_name }}.csr" -passin "file://{{ docker_tls_dir }}/ca/passphrase.txt" -CA "{{ docker_tls_dir }}/ca/cert.pem" -CAkey "{{ docker_tls_dir }}/ca/key.pem" -CAcreateserial -out "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/cert.pem" -extfile "{{ docker_tls_dir }}/{{ docker_tls_client_name }}/{{ docker_tls_client_name }}.cnf"'
+  
+  - name: Backup the TLS files in an AWS S3 bucket
+    shell: 'aws s3 cp --recursive "{{ docker_tls_dir }}" s3://{{ docker_tls_s3_bucket }}/{{ docker_tls_s3_bucket_dir }}'
+    environment:
+      AWS_ACCESS_KEY_ID: "{{ docker_tls_aws_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ docker_tls_aws_secret_access_key }}"
+    when: docker_tls_backup_to_s3
+
+  when: server_cert_file.stat.exists == False or docker_tls_force_recreate

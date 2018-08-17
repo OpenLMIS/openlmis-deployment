@@ -1,0 +1,8 @@
+---
+- name: Install dependencies from APT
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - awscli
+    - python-openssl

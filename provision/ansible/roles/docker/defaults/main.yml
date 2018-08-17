@@ -21,8 +21,10 @@ docker_tls_ca_org: "Some Org"
 docker_tls_ca_org_unit: "Docker"
 docker_tls_ca_email_address: "info@some.org"
 docker_tls_s3_bucket: ""
-docker_tls_s3_bucket_dir: "tls/{{ docker_tls_dns_name }}/`hostname`"
+docker_tls_s3_bucket_dir: "tls/{{ docker_tls_dns_name }}/{{ ansible_ssh_host }}/`date --iso-8601=seconds`"
+docker_tls_backup_to_s3: no
 docker_tls_aws_access_key_id: ""
 docker_tls_aws_secret_access_key: ""
+docker_tls_client_name: "client"
 docker_tls_force_recreate: no
 docker_dockerd_start_cmd: "{{ docker_dockerd_bin_path }}"
