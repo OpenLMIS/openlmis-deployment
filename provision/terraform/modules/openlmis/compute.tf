@@ -19,3 +19,27 @@ resource "aws_instance" "app" {
     Type = "Demo"
   }
 }
+
+resource "null_resource" "deploy-docker" {
+  depends_on = ["aws_instance.app"]
+
+  connection {
+    user = "${var.app-instance-ssh-user}"
+    host = "${aws_instance.app.public_ip}"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["ls"]
+
+    connection = {
+      type = "ssh"
+      user = "${var.app-instance-ssh-user}"
+    }
+  }
+  provisioner "local-exec" {
+    command = "cd ${var.docker-ansible-dir} && mkdir -p vendor/roles && ansible-galaxy install -p vendor/roles -r requirements/galaxy.yml"
+  }
+  provisioner "local-exec" {
+    command = "cd ${var.docker-ansible-dir} && ansible-playbook -vvvv -i inventory docker.yml -e docker_dockerd_tls_port=${var.docker-https-port} -e docker_tls_aws_access_key_id=\"${var.app-tls-s3-access-key-id}\" -e docker_tls_aws_secret_access_key=\"${var.app-tls-s3-secret-access-key}\" -e docker_tls_dns_name=${var.app-dns-name} -e ansible_ssh_user=${var.app-instance-ssh-user}  --limit ${aws_instance.app.public_ip}"
+  }
+}
