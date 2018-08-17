@@ -32,3 +32,8 @@ variable "app-dns-name" {
   type        = "string"
   description = "The DNS name associated to the app instance"
 }
+
+variable "app-instance-group" {
+  type        = "string"
+  description = "The deployment group to place the app host. Will dictate what Ansible playbooks can ran on it"
+}

@@ -20,4 +20,5 @@ module "uat3" {
   app-tls-s3-access-key-id     = "${var.app-tls-s3-access-key-id}"
   app-tls-s3-secret-access-key = "${var.app-tls-s3-secret-access-key}"
   app-dns-name                 = "${var.app-dns-name}"
+  app-instance-group           = "${var.app-instance-group}"
 }

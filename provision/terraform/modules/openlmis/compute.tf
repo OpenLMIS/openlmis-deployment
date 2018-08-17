@@ -12,9 +12,10 @@ resource "aws_instance" "app" {
   }
 
   tags {
-    Name   = "${var.name}-env"
-    BillTo = "OpenLMIS"
-    Type   = "Demo"
+    Name        = "${var.name}-env"
+    BillTo      = "OpenLMIS"
+    Type        = "Demo"
+    DeployGroup = "${var.app-instance-group}"
   }
 
   volume_tags {
