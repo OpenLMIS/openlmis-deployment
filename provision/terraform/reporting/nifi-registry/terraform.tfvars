@@ -1,6 +1,6 @@
 nr-instance-type = "t2.medium"
 nr-volume-size = "200"
-nr-ssh-key = "ona-terraform-tbd"
+nr-ssh-key = "openlmis-reporting"
 nr-name = "nifi-registry.openlmis.org"
 env = "Demo"
 bill-to = "OpenLMIS"
