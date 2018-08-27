@@ -18,12 +18,12 @@ variable "docker-tls-port" {
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
 }
 
-variable "app-tls-s3-access-key-id" {
+variable "aws-access-key-id" {
   type        = "string"
   description = "The AWS access key ID to use to backup generated Docker TLS files"
 }
 
-variable "app-tls-s3-secret-access-key" {
+variable "aws-secret-access-key" {
   type        = "string"
   description = "The AWS secrect access key to use to backup generated Docker TLS files"
 }

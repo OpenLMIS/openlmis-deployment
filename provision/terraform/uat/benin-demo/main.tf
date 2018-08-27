@@ -17,8 +17,8 @@ module "benin-demo" {
   app-instance-ssh-user        = "${var.app-instance-ssh-user}"
   docker-ansible-dir           = "${var.docker-ansible-dir}"
   docker-tls-port              = "${var.docker-tls-port}"
-  app-tls-s3-access-key-id     = "${var.app-tls-s3-access-key-id}"
-  app-tls-s3-secret-access-key = "${var.app-tls-s3-secret-access-key}"
+  app-tls-s3-access-key-id     = "${var.aws-access-key-id}"
+  app-tls-s3-secret-access-key = "${var.aws-secret-access-key}"
   app-dns-name                 = "${var.app-dns-name}"
   app-instance-group           = "${var.app-instance-group}"
 }
