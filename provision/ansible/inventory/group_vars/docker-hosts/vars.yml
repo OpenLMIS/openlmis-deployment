@@ -7,6 +7,8 @@ docker_tls_ca_locality: "Seatle"
 docker_tls_ca_org: "OpenLMIS"
 docker_tls_ca_org_unit: "Docker"
 docker_tls_ca_email_address: "info@openlmis.org"
+
+# The S3 bucket to copy TLS files generated to access the Docker daemon
 docker_tls_s3_bucket: "aws-instance-keys"
 docker_tls_client_name: "jenkins"
 docker_tls_backup_to_s3: yes

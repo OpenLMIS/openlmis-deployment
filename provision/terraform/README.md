@@ -24,3 +24,20 @@ under `uat/uat3`.
   terraform import module.<NAME OF SETUP>.aws_elb.elb <NAME OF ELB>
   terraform import module.<NAME OF SETUP>.aws_db_instance.rds <NAME OF RDS INSTANCE>
   ```
+
+### Setup
+
+Use the following steps to set up the machine you'll be running Terraform from:
+
+1. Follow [these](https://www.terraform.io/intro/getting-started/install.html) instructions to install Terraform.
+
+1. Install Ansible and its dependencies using the steps described [here](../ansible/README.md).
+
+1. Make sure the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables are set to credentials that are able to create the resources defined in the Terraform files. You can do this using the instructions described [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html).
+
+1. Copy the `AWS_ACCESS_KEY_ID` and `AWD_SECRET_ACCESS_KEY` environment variables to Terraform variables. The automation scrips will use these Terraform variables to backup TLS certificates and keys for securely connecting to the installed Docker daemon in the S3 bucket specified [here](../ansible/inventory/group_vars/docker-hosts/vars.yml). Use the following commands to set the Terraform variables:
+
+```sh
+export TF_VAR_aws-access-key-id=AWS_ACCESS_KEY_ID
+export TF_VAR_aws-secret-access-key=AWS_SECRET_ACCESS_KEY
+```
