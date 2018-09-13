@@ -1,4 +1,4 @@
-version: '2'
+version: "3.3"
 services:
 
   consul:
@@ -13,7 +13,7 @@ services:
   nginx:
     image: openlmis/nginx:${OL_NGINX_VERSION}
     ports:
-      - "80:80"
+      - "${OL_HTTP_PORT:-80}:80"
     env_file: settings.env
     environment:
       NGINX_LOG_DIR: '/var/log/nginx/log'
@@ -100,7 +100,7 @@ services:
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: production
+      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
@@ -115,7 +115,7 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
-    
+
   diagnostics:
     restart: always
     image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
@@ -157,8 +157,8 @@ services:
   ftp:
     image: hauptmedia/proftpd
     ports:
-      - "21:21"
-      - "20:20"
+      - "${OL_FTP_PORT_21:-21}:21"
+      - "${OL_FTP_PORT_20:-20}:20"
     env_file: settings.env
     depends_on: [consul]
 

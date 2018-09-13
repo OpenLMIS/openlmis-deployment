@@ -15,7 +15,7 @@ if [ ! -z "$ENV_RESTORE_SNAPSHOT" ]; then
   sleep 300
   /usr/bin/docker run --rm --env-file settings.env openlmis/obscure-data
 else
-  cp .deployment-config/perftest.env settings.env
+  cp .deployment-config/reporting-gap-data.env settings.env
   docker pull openlmis/demo-data
   /usr/bin/docker run --rm --env-file settings.env openlmis/demo-data
 fi
