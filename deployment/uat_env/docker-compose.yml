@@ -115,6 +115,13 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+
+  hapifhir:
+    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
+    depends_on: [consul]
+    env_file: settings.env
+    volumes:
+      - 'service-config:/config'
     
   diagnostics:
     restart: always
