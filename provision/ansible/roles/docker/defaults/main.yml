@@ -1,0 +1,30 @@
+docker_dockerd_enable_tls: yes
+docker_dockerd_verify_clients: yes
+docker_dockerd_bind_address: "0.0.0.0"
+docker_systemd_service_name: "docker.service"
+docker_dockerd_bin_path: /usr/bin/dockerd
+docker_dockerd_tls_port: 2376
+docker_tls_local_ca_cert_path: ""
+docker_tls_local_server_cert_path: ""
+docker_tls_local_server_key_path: ""
+docker_tls_dir: "/etc/docker/tls"
+docker_tls_ca_cert_path: "{{ docker_tls_dir }}/ca-cert.pem"
+docker_tls_server_cert_path: "{{ docker_tls_dir }}/server-cert.pem"
+docker_tls_server_key_path: "{{ docker_tls_dir }}/server-key.pem"
+docker_tls_key_size: 4096
+docker_tls_expiry_days: 365
+docker_tls_dns_name: "docker"
+docker_tls_ca_country: "US"
+docker_tls_ca_province: "New York"
+docker_tls_ca_locality: "New York"
+docker_tls_ca_org: "Some Org"
+docker_tls_ca_org_unit: "Docker"
+docker_tls_ca_email_address: "info@some.org"
+docker_tls_s3_bucket: ""
+docker_tls_s3_bucket_dir: "tls/{{ docker_tls_dns_name }}/{{ ansible_ssh_host }}/`date --iso-8601=seconds`"
+docker_tls_backup_to_s3: no
+docker_tls_aws_access_key_id: ""
+docker_tls_aws_secret_access_key: ""
+docker_tls_client_name: "client"
+docker_tls_force_recreate: no
+docker_dockerd_start_cmd: "{{ docker_dockerd_bin_path }}"

@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     "bucket" = "openlmis-terraform-states"
-    "key"    = "uat-uat3.tf"
+    "key"    = "uat-benin-demo.tf"
     "region" = "us-east-1"
   }
 }
@@ -10,7 +10,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "uat3" {
+module "benin-demo" {
   source = "../../modules/openlmis"
 
   name                         = "${var.name}"
