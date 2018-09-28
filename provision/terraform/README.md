@@ -57,10 +57,6 @@ To import an existing "setup" into terraform:
 
 Use the following steps to set up the machine you'll be running Terraform from:
 
-1. Follow [these](https://www.terraform.io/intro/getting-started/install.html) 
-  instructions to install Terraform.
-1. Install Ansible and its dependencies using the steps described 
-  [here](../ansible/README.md).
 1. Make sure the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment 
   variables are set to credentials that are able to create the resources defined 
   in the Terraform files. You can do this using the instructions described 
@@ -76,3 +72,4 @@ Use the following steps to set up the machine you'll be running Terraform from:
   export TF_VAR_aws-access-key-id=AWS_ACCESS_KEY_ID
   export TF_VAR_aws-secret-access-key=AWS_SECRET_ACCESS_KEY
   ```
+1. Add the right key to SSH-Agent.  e.g. `ssh-add TestEnvDockerHost.env`
