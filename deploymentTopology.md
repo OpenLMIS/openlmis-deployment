@@ -25,8 +25,8 @@ actively used for more than half the day):
   * For *local development*, *QA*, and *small private  demos*: use Ref Distro's
     included database or a **db.t2.micro** (though you'll need to increase the
     max_connections parameter to >150)
-  * For *CD*, *public demos*, *UAT*, and *small production*: **db.t2.medium**
-  * For *medium and larger production instances*: **db.t2.large** and up based on need:
+  * For *CD*, limited *public demos*, limited *UAT*: **db.t2.medium**
+  * For *medium and larger deployments* as well as *production*: **db.t2.large** *or larger* based on need:
     * When reports are frequently run
     * When the number of Products (full and non-full supply) > 500
     * When the number of Requisitions (historical and planned for next 2
