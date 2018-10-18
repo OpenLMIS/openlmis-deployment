@@ -69,8 +69,8 @@ Use the following steps to set up the machine you'll be running Terraform from:
   following commands to set the Terraform variables:
 
     ```sh
-    export TF_VAR_aws-access-key-id=AWS_ACCESS_KEY_ID
-    export TF_VAR_aws-secret-access-key=AWS_SECRET_ACCESS_KEY
+    export TF_VAR_aws_access_key_id=$AWS_ACCESS_KEY_ID
+    export TF_VAR_aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
     ```
 
 1. Add the right key to SSH-Agent.  e.g. `ssh-add TestEnvDockerHost.env`
