@@ -74,3 +74,19 @@ Use the following steps to set up the machine you'll be running Terraform from:
     ```
 
 1. Add the right key to SSH-Agent.  e.g. `ssh-add TestEnvDockerHost.env`
+
+### Creating openlmis infrastructure from existing environment
+
+1. `cd` to directory holding environment.  e.g. `cd uat/uat3`
+1. Ensure you're using the right virtualenv. e.g. `workon openlmis-deployment`
+1. (optional) `terrform plan` to see which resources will be created.
+1. `terraform apply` to create the environment.
+1. Create/update the DNS CNAME in Gandi to point to the new ELB.
+1. Once done the needed Docker TLS client keys will be in the S3 bucket 
+`aws-instance-keys`:
+    1. Download the following files from `/tls/<name of environment>/<ip>/<date>/`:
+        - `ca/cert.pem` -> `ca.pem`
+        - `jenkins/key.pem` -> `key.pem`
+       - `jenkins/cert.pem` -> `cert.pem`
+    1. Zip the above files into `DockerClientTls-<name of environemt>.zip`
+    1. Upload Zip file above to Jenkins Credentials and use in `deploy-to` job.
