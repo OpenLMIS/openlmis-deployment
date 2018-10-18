@@ -73,12 +73,12 @@ variable "nr-dns-name" {
   description = "The DNS name associated to NiFi Registry"
 }
 
-variable "aws-access-key-id" {
+variable "aws_access_key_id" {
   type        = "string"
   description = "The AWS access key ID to use to backup generated Docker TLS files"
 }
 
-variable "aws-secret-access-key" {
+variable "aws_secret_access_key" {
   type        = "string"
   description = "The AWS secrect access key to use to backup generated Docker TLS files"
 }

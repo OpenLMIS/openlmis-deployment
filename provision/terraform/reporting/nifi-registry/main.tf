@@ -28,7 +28,7 @@ module "nifi-registry" {
   nr-instance-ssh-user        = "${var.nr-instance-ssh-user}"
   docker-ansible-dir          = "${var.docker-ansible-dir}"
   nr-dns-name                 = "${var.nr-dns-name}"
-  nr-tls-s3-access-key-id     = "${var.aws-access-key-id}"
-  nr-tls-s3-secret-access-key = "${var.aws-secret-access-key}"
+  nr-tls-s3-access-key-id     = "${var.aws_access_key_id}"
+  nr-tls-s3-secret-access-key = "${var.aws_secret_access_key}"
   docker-tls-port             = "${var.docker-tls-port}"
 }
