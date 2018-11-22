@@ -1,4 +1,4 @@
-version: '2'
+version: "3.3"
 services:
 
   consul:
@@ -13,7 +13,7 @@ services:
   nginx:
     image: openlmis/nginx:${OL_NGINX_VERSION}
     ports:
-      - "80:80"
+      - "${OL_HTTP_PORT:-80}:80"
     env_file: settings.env
     environment:
       NGINX_LOG_DIR: '/var/log/nginx/log'
@@ -28,86 +28,80 @@ services:
     depends_on: [consul]
 
   requisition:
-    restart: always
     image: openlmis/requisition:${OL_REQUISITION_VERSION}
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
     depends_on: [log]
 
   referencedata:
-    restart: always
     image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
     depends_on: [log]
 
   auth:
-    restart: always
     image: openlmis/auth:${OL_AUTH_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-      - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
 
   notification:
-    restart: always
     image: openlmis/notification:${OL_NOTIFICATION_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
 
   fulfillment:
-    restart: always
     image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
 
   cce:
-    restart: always
     image: openlmis/cce:${OL_CCE_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
 
   stockmanagement:
-    restart: always
     image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
 
   report:
-    restart: always
     image: openlmis/report:${OL_REPORT_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+
+  hapifhir:
+    restart: always
+    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -117,7 +111,6 @@ services:
     depends_on: [log]
     
   diagnostics:
-    restart: always
     image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
     env_file: settings.env
     environment:
@@ -127,26 +120,22 @@ services:
       - 'service-config:/config'
     depends_on: [log]
 
+  db:
+    image: openlmis/postgres:${OL_POSTGRES_VERSION}
+    env_file: settings.env
+    networks:
+      default:
+        aliases:
+          - olmis-db
+    depends_on: [consul]
 
   log:
-    restart: always
     image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
     volumes:
       - 'syslog:/var/log'
     depends_on:
       - service-configuration
       - consul
-
-  scalyr:
-    image: openlmis/scalyr
-    container_name: scalyr-agent
-    env_file: settings.env
-    volumes:
-      - 'service-config:/config'
-      - '/run/docker.sock:/var/scalyr/docker.sock'
-      - 'syslog:/var/log'
-      - 'nginx-log:/var/log/nginx/log'
-      - 'auth-tomcat-log:/var/log/auth-tomcat'
 
   service-configuration:
     build:
@@ -157,8 +146,8 @@ services:
   ftp:
     image: hauptmedia/proftpd
     ports:
-      - "21:21"
-      - "20:20"
+      - "${OL_FTP_PORT_21:-21}:21"
+      - "${OL_FTP_PORT_20:-20}:20"
     env_file: settings.env
     depends_on: [consul]
 
@@ -170,8 +159,6 @@ volumes:
   syslog:
     external: false
   nginx-log:
-    external: false
-  auth-tomcat-log:
     external: false
   consul-template-log:
     external: false
