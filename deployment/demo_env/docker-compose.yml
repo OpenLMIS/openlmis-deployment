@@ -37,6 +37,7 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   referencedata:
     restart: always
@@ -48,18 +49,20 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   auth:
     restart: always
     image: openlmis/auth:${OL_AUTH_VERSION}
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   notification:
     restart: always
@@ -71,17 +74,19 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   fulfillment:
     restart: always
     image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   cce:
     restart: always
@@ -93,29 +98,32 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   stockmanagement:
     restart: always
     image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   report:
     restart: always
     image: openlmis/report:${OL_REPORT_VERSION}
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
     depends_on: [log]
-    
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+
   diagnostics:
     restart: always
     image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
