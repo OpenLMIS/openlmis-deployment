@@ -60,6 +60,7 @@ services:
       - 'service-config:/config'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]    
 
   notification:
     restart: always
