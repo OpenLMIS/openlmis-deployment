@@ -36,7 +36,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   referencedata:
     restart: always
@@ -47,7 +48,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   auth:
     restart: always
@@ -59,7 +61,8 @@ services:
     volumes:
       - 'service-config:/config'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   notification:
     restart: always
@@ -70,7 +73,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   fulfillment:
     restart: always
@@ -81,7 +85,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   cce:
     restart: always
@@ -92,7 +97,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   stockmanagement:
     restart: always
@@ -103,7 +109,8 @@ services:
       spring_profiles_active: production
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   report:
     restart: always
@@ -114,7 +121,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
 
   hapifhir:
     restart: always
@@ -125,7 +133,8 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
     
   diagnostics:
     restart: always
