@@ -34,7 +34,7 @@ services:
       JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   referencedata:
@@ -44,7 +44,7 @@ services:
       JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   auth:
@@ -54,7 +54,7 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   notification:
@@ -64,7 +64,7 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   fulfillment:
@@ -74,7 +74,7 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   cce:
@@ -84,7 +84,7 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   stockmanagement:
@@ -94,7 +94,7 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   report:
@@ -104,7 +104,7 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
   hapifhir:
@@ -116,7 +116,7 @@ services:
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
-    depends_on: [log]
+    depends_on: [log, db]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     
   diagnostics:
