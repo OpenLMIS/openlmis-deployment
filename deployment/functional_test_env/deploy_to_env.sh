@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+docker pull openlmis/start-instance
+
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://functional-test.openlmis.org:2376"
 export DOCKER_CERT_PATH="${PWD}/credentials"
@@ -8,7 +10,6 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 
 if $START_EC2_INSTANCE; then
   echo "Starting EC2 instance for functional test server"
-  docker pull openlmis/start-instance
   /usr/bin/docker run --rm --env-file settings.env openlmis/start-instance
 fi
 
