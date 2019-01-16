@@ -7,7 +7,7 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 ../shared/init_env_gh.sh
 
 if $START_EC2_INSTANCE; then
-  cp .deployment-config/functional-test.env settings.env
+  echo "Starting EC2 instance for functional test server"
   docker pull openlmis/start-instance
   /usr/bin/docker run --rm --env-file settings.env openlmis/start-instance
 fi
