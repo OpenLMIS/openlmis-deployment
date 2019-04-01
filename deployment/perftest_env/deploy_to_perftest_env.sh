@@ -6,7 +6,7 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 
 ../shared/init_env_gh.sh
 
-docker system -f prune
+docker system prune -f
 
 if [ ! -z "$ENV_RESTORE_SNAPSHOT" ]; then
   export KEEP_OR_WIPE="use_env"
