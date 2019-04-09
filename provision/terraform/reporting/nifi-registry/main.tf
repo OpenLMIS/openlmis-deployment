@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "${var.aws-region}"
 }
 
 module "nifi-registry" {
@@ -31,4 +31,11 @@ module "nifi-registry" {
   nr-tls-s3-access-key-id     = "${var.aws_access_key_id}"
   nr-tls-s3-secret-access-key = "${var.aws_secret_access_key}"
   docker-tls-port             = "${var.docker-tls-port}"
+  nr-assign-elastic-ip        = "${var.nr-assign-elastic-ip}"
+  nr-acm-certificate-arn      = "${var.nr-acm-certificate-arn}"
+  nr-elb-subnets              = "${var.nr-elb-subnets}"
+  nr-use-route53-domain       = "${var.nr-use-route53-domain}"
+  nr-route53-zone-name        = "${var.nr-route53-zone-name}"
+  nr-nifi-domain              = "${var.nr-nifi-domain}"
+  nr-superset-domain          = "${var.nr-superset-domain}"
 }

@@ -53,6 +53,91 @@ resource "aws_security_group" "nifi-registry" {
 }
 
 resource "aws_eip" "nifi-registry" {
+  count = "${var.nr-assign-elastic-ip ? 1 : 0}"
   instance = "${aws_instance.nifi-registry.id}"
   vpc      = true
+}
+resource "aws_elb" "nr-elb" {
+  name      = "${var.nr-name}-${var.env}-elb"
+  instances = ["${aws_instance.nifi-registry.id}"]
+
+  subnets                   = "${var.nr-elb-subnets}"
+  security_groups           = ["${aws_security_group.nifi-registry.id}"]
+  cross_zone_load_balancing = true
+  idle_timeout              = 60
+  connection_draining       = true
+
+  listener {
+    lb_port           = 80
+    lb_protocol       = "http"
+    instance_port     = 80
+    instance_protocol = "http"
+  }
+
+  listener {
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "${var.nr-acm-certificate-arn}"
+    instance_port      = 80
+    instance_protocol  = "http"
+  }
+
+  listener {
+    lb_port           = 22
+    lb_protocol       = "tcp"
+    instance_port     = 22
+    instance_protocol = "tcp"
+  }
+
+  listener {
+    lb_port           = 2376
+    lb_protocol       = "tcp"
+    instance_port     = 2376
+    instance_protocol = "tcp"
+  }
+
+  health_check {
+    target              = "TCP:22"
+    healthy_threshold   = 10
+    unhealthy_threshold = 2
+    interval            = 30
+    timeout             = 5
+  }
+
+  tags {
+    BillTo = "OpenLMIS"
+    Type   = "Demo"
+  }
+}
+data "aws_route53_zone" "selected" {
+  count        = "${var.nr-use-route53-domain? 1 : 0}"
+  name         = "${var.nr-route53-zone-name}"
+  private_zone = false
+}
+
+resource "aws_route53_record" "nifi-registry" {
+  count   = "${var.nr-use-route53-domain? 1: 0}"
+  zone_id = "${data.aws_route53_zone.selected.zone_id}"
+  name    = "${var.nr-nifi-domain}"
+  type    = "A"
+
+  alias {
+    name = "${aws_elb.nr-elb.dns_name}"
+    zone_id = "${aws_elb.nr-elb.zone_id}"
+    evaluate_target_health = true
+
+  }
+}
+resource "aws_route53_record" "superset" {
+  count        = "${var.nr-use-route53-domain? 1: 0}"
+  zone_id = "${data.aws_route53_zone.selected.zone_id}"
+  name    = "${var.nr-superset-domain}"
+  type    = "A"
+
+  alias {
+    name = "${aws_elb.nr-elb.dns_name}"
+    zone_id = "${aws_elb.nr-elb.zone_id}"
+    evaluate_target_health = true
+
+  }
 }
