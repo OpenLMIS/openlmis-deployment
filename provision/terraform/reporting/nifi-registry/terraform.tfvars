@@ -1,4 +1,4 @@
-nr-instance-type = "t2.medium"
+nr-instance-type = "m5a.large"
 nr-volume-size = "200"
 nr-ssh-key = "openlmis-reporting"
 nr-name = "nifi-registry.openlmis.org"
