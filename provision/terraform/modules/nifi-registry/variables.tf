@@ -38,6 +38,17 @@ variable "nr-https-port" {
   description = "The HTTPS port NiFi Registry runs on"
 }
 
+variable "http-port" {
+  type        = "string"
+  description = "The HTTP port NGINX runs on"
+  default     = "80"
+}
+
+variable "https-port" {
+  type        = "string"
+  description = "The HTTPS port NGINX runs on"
+  default     = "443"
+}
 variable "nr-subnet-id" {
   type        = "string"
   description = "ID of subnet the NiFi Registry host should be in"
