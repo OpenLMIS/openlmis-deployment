@@ -17,7 +17,7 @@ export NIFI_DOMAIN_NAME=nifi.uat.openlmis.org
 
 reportingRepo=$1
 
-cp -r "$credentials" "$DOCKER_CERT_PATH"
+cp -r "$docker_credentials" "$DOCKER_CERT_PATH"
 cp -r "$reporting_ssl" "$reportingRepo/$REPORTING_DIR_NAME/config/services/nginx/tls/reporting-uat"
 cd "$reportingRepo/$REPORTING_DIR_NAME"
 $DOCKER_COMPOSE_BIN kill
