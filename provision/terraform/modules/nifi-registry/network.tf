@@ -128,8 +128,7 @@ data "aws_route53_zone" "selected" {
   name         = "${var.nr-route53-zone-name}"
   private_zone = false
 }
-
-resource "aws_route53_record" "nifi-registry" {
+resource "aws_route53_record" "nifi" {
   count   = "${var.nr-use-route53-domain? 1: 0}"
   zone_id = "${data.aws_route53_zone.selected.zone_id}"
   name    = "${var.nr-nifi-domain}"
