@@ -24,7 +24,7 @@ resource "aws_security_group" "nifi-registry" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     from_port   = "${var.http-port}"
     to_port     = "${var.http-port}"
     protocol    = "tcp"
@@ -67,10 +67,11 @@ resource "aws_security_group" "nifi-registry" {
 }
 
 resource "aws_eip" "nifi-registry" {
-  count = "${var.nr-assign-elastic-ip ? 1 : 0}"
+  count    = "${var.nr-assign-elastic-ip ? 1 : 0}"
   instance = "${aws_instance.nifi-registry.id}"
   vpc      = true
 }
+
 resource "aws_elb" "nr-elb" {
   name      = "${var.nr-name}-${var.env}-elb"
   instances = ["${aws_instance.nifi-registry.id}"]
@@ -123,11 +124,13 @@ resource "aws_elb" "nr-elb" {
     Type   = "Demo"
   }
 }
+
 data "aws_route53_zone" "selected" {
   count        = "${var.nr-use-route53-domain? 1 : 0}"
   name         = "${var.nr-route53-zone-name}"
   private_zone = false
 }
+
 resource "aws_route53_record" "nifi" {
   count   = "${var.nr-use-route53-domain? 1: 0}"
   zone_id = "${data.aws_route53_zone.selected.zone_id}"
@@ -135,22 +138,21 @@ resource "aws_route53_record" "nifi" {
   type    = "A"
 
   alias {
-    name = "${aws_elb.nr-elb.dns_name}"
-    zone_id = "${aws_elb.nr-elb.zone_id}"
+    name                   = "${aws_elb.nr-elb.dns_name}"
+    zone_id                = "${aws_elb.nr-elb.zone_id}"
     evaluate_target_health = true
-
   }
 }
+
 resource "aws_route53_record" "superset" {
-  count        = "${var.nr-use-route53-domain? 1: 0}"
+  count   = "${var.nr-use-route53-domain? 1: 0}"
   zone_id = "${data.aws_route53_zone.selected.zone_id}"
   name    = "${var.nr-superset-domain}"
   type    = "A"
 
   alias {
-    name = "${aws_elb.nr-elb.dns_name}"
-    zone_id = "${aws_elb.nr-elb.zone_id}"
+    name                   = "${aws_elb.nr-elb.dns_name}"
+    zone_id                = "${aws_elb.nr-elb.zone_id}"
     evaluate_target_health = true
-
   }
 }

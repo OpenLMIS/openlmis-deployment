@@ -89,45 +89,45 @@ variable "docker-tls-port" {
 }
 
 variable "aws-region" {
-  type="string"
-  description="The AWS region to place the infrastructure in"
+  type        = "string"
+  description = "The AWS region to place the infrastructure in"
 }
 
 variable "nr-assign-elastic-ip" {
-  type = "string"
+  type        = "string"
   description = "Whether to assign an elastic IP to the instance"
 }
 
 variable "nr-acm-certificate-arn" {
-  type = "string"
+  type        = "string"
   description = "ARN of the Amazon certificate to use on the loadbalancer"
 }
 
 variable "nr-elb-subnets" {
-  type = "list"
+  type        = "list"
   description = "Subnets to attach to the ELB"
 }
 
 variable "nr-use-route53-domain" {
-  type = "string"
+  type        = "string"
   description = "Whether to use route53 hosted domain"
-  default = false
+  default     = false
 }
 
 variable "nr-route53-zone-name" {
-  type = "string"
+  type        = "string"
   description = "The route53 hosted zone name to use"
-  default = ""
+  default     = ""
 }
 
 variable "nr-nifi-domain" {
-  type = "string"
+  type        = "string"
   description = "The nifi domain to create. Should be a subdomain of nr-route53-zone-name"
-  default = ""
+  default     = ""
 }
 
 variable "nr-superset-domain" {
-  type = "string"
+  type        = "string"
   description = "The superset domain to create. Should be a subdomain of nr-route53-zone-name"
-  default = ""
+  default     = ""
 }
