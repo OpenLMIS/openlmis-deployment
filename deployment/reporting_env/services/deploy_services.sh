@@ -14,7 +14,9 @@ export NIFI_ENABLE_SSL=false
 export NIFI_BEHIND_LOAD_BALANCER=true
 export NIFI_LOAD_BALANCER_REDIRECT_HTTP=true
 export NIFI_DOMAIN_NAME=nifi.uat.openlmis.org
-
+export OL_NIFI_MEMORY_LIMIT=1500m
+export OL_NIFI_MEMORY_RESERVATION=500m
+export OL_NIFI_CPU_USAGE=0.3
 reportingRepo=$1
 
 cd "$reportingRepo/$REPORTING_DIR_NAME"
