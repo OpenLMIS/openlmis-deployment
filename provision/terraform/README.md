@@ -48,6 +48,7 @@ To import an existing "setup" into terraform:
   e.g. `uat/uat3`.
 
     ```
+    terraform init
     terraform import module.<Name OF SETUP>.aws_instance.app <ID OF INSTANCE>
     terraform import module.<NAME OF SETUP>.aws_elb.elb <NAME OF ELB>
     terraform import module.<NAME OF SETUP>.aws_db_instance.rds <NAME OF RDS INSTANCE>
