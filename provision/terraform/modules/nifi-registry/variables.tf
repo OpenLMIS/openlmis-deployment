@@ -38,6 +38,18 @@ variable "nr-https-port" {
   description = "The HTTPS port NiFi Registry runs on"
 }
 
+variable "http-port" {
+  type        = "string"
+  description = "The HTTP port NGINX runs on"
+  default     = "80"
+}
+
+variable "https-port" {
+  type        = "string"
+  description = "The HTTPS port NGINX runs on"
+  default     = "443"
+}
+
 variable "nr-subnet-id" {
   type        = "string"
   description = "ID of subnet the NiFi Registry host should be in"
@@ -86,4 +98,44 @@ variable "nr-tls-s3-secret-access-key" {
 variable "docker-tls-port" {
   type        = "string"
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
+}
+
+variable "nr-assign-elastic-ip" {
+  type        = "string"
+  description = "Whether to assign an elastic IP to the instance"
+  default     = true
+}
+
+variable "nr-acm-certificate-arn" {
+  type        = "string"
+  description = "ARN of the Amazon certificate to use on the loadbalancer"
+}
+
+variable "nr-elb-subnets" {
+  type        = "list"
+  description = "Subnets to attach to the ELB"
+}
+
+variable "nr-use-route53-domain" {
+  type        = "string"
+  description = "Whether to use route53 hosted"
+  default     = false
+}
+
+variable "nr-route53-zone-name" {
+  type        = "string"
+  description = "The route53 hosted zone name to use"
+  default     = ""
+}
+
+variable "nr-nifi-domain" {
+  type        = "string"
+  description = "The nifi domain to create. Should be a subdomain of nr-route53-zone-name"
+  default     = ""
+}
+
+variable "nr-superset-domain" {
+  type        = "string"
+  description = "The superset domain to create. Should be a subdomain of nr-route53-zone-name"
+  default     = ""
 }
