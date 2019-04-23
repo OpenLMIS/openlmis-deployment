@@ -33,6 +33,7 @@ services:
       driver: syslog
       options:
         syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    restart: always
     depends_on: [log]
 
 volumes:
