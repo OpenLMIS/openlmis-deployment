@@ -15,6 +15,7 @@ services:
       - flow-storage:${BACKUP_DIRECTORY}/nifi-registry-persistence
     env_file: settings.env
     environment:
+      BACKUP_CRON_SCHEDULE: ${BACKUP_CRON_SCHEDULE}
       BACKUP_DIRECTORY: ${BACKUP_DIRECTORY}
   scalyr:
     image: openlmis/scalyr:${OL_SCALYR_AGENT_VERSION}
