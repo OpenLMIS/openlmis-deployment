@@ -38,3 +38,18 @@ variable "app-instance-group" {
   description = "The deployment group to place the app host. Will dictate what Ansible playbooks can ran on it"
 }
 
+variable "olmis-db-instance-class" {
+  type        = "string"
+  description = "The RDS db instance type. If left empty then RDS instance will not be used."
+}
+
+variable "olmis-db-username" {
+  type        = "string"
+  description = "PostgreSQL database username."
+}
+
+variable "olmis-db-password" {
+  type        = "string"
+  description = "The PostgreSQL database password."
+}
+

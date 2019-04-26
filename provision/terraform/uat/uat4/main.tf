@@ -21,4 +21,7 @@ module "uat4" {
   app-tls-s3-secret-access-key = "${var.aws_secret_access_key}"
   app-dns-name                 = "${var.app-dns-name}"
   app-instance-group           = "${var.app-instance-group}"
+  olmis-db-instance-class      = "${var.olmis-db-instance-class}"
+  olmis-db-username            = "${var.olmis-db-username}"
+  olmis-db-password            = "${var.olmis-db-password}"
 }

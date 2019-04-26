@@ -18,16 +18,6 @@ variable "docker-tls-port" {
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
 }
 
-variable "aws_access_key_id" {
-  type        = "string"
-  description = "The AWS access key ID to use to backup generated Docker TLS files"
-}
-
-variable "aws_secret_access_key" {
-  type        = "string"
-  description = "The AWS secrect access key to use to backup generated Docker TLS files"
-}
-
 variable "app-dns-name" {
   type        = "string"
   description = "The DNS name associated to the app instance"
@@ -53,3 +43,12 @@ variable "olmis-db-password" {
   description = "The PostgreSQL database password."
 }
 
+variable "aws_access_key_id" {
+  type        = "string"
+  description = "The AWS access key ID to use to backup generated Docker TLS files"
+}
+
+variable "aws_secret_access_key" {
+  type        = "string"
+  description = "The AWS secrect access key to use to backup generated Docker TLS files"
+}
