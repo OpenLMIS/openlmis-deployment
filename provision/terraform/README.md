@@ -26,7 +26,7 @@ most likely your development computer.
     * `mkvirtualenv olmis-deployment` if you need a new virtual environment.
 
 1. Install the requirements for our Ansible scripts:
-  `pip install ../ansible/requirements/ansible.pip`
+  `pip install -r ../ansible/requirements/ansible.pip`
 
 
 ## Usage
