@@ -89,7 +89,7 @@ Use the following steps to set up the machine you'll be running Terraform from:
         - `ca/cert.pem` -> `ca.pem`
         - `jenkins/key.pem` -> `key.pem`
        - `jenkins/cert.pem` -> `cert.pem`
-    1. Zip the above files into `DockerClientTls-<name of environemt>.zip`
+    1. Zip the above files into `DockerClientTls-<name of environemt>.zip`.  e.g. `zip DockerClientTls-uat3.zip ca.pem cert.pem key.pem`.
     1. Upload Zip file above to Jenkins Credentials and use in `deploy-to` job.
 1. Remember to install required Postgres extensions (postgis and uuid-ossp) on RDS database.
   It seems that pre-installed 'uuid-ossp' extension is not working correctly 
