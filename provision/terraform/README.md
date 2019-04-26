@@ -74,7 +74,7 @@ Use the following steps to set up the machine you'll be running Terraform from:
     export TF_VAR_aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
     ```
 
-1. Add the right key to SSH-Agent.  e.g. `ssh-add TestEnvDockerHost.env`
+1. Add the right key to SSH-Agent.  e.g. `ssh-add ~/.ssh/TestEnvDockerHost.pem`
 
 ### Creating openlmis infrastructure from existing environment
 
