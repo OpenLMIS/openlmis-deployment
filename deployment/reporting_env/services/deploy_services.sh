@@ -14,6 +14,7 @@ export NIFI_ENABLE_SSL=false
 export NIFI_BEHIND_LOAD_BALANCER=true
 export NIFI_LOAD_BALANCER_REDIRECT_HTTP=true
 export NIFI_DOMAIN_NAME=nifi.uat.openlmis.org
+export NIFI_JVM_HEAP_MAX=1g
 
 reportingRepo=$1
 
