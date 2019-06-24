@@ -50,3 +50,22 @@ resource "aws_elb" "elb" {
     Type   = "Demo"
   }
 }
+
+data "aws_route53_zone" "app" {
+  count        = "${var.app-use-route53-domain? 1 : 0}"
+  name         = "${var.app-route53-zone-name}"
+  private_zone = false
+}
+
+resource "aws_route53_record" "app" {
+  count   = "${var.app-use-route53-domain? 1: 0}"
+  zone_id = "${data.aws_route53_zone.app.zone_id}"
+  name    = "${var.app-dns-name}"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_elb.elb.dns_name}"
+    zone_id                = "${aws_elb.elb.zone_id}"
+    evaluate_target_health = true
+  }
+}

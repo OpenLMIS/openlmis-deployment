@@ -21,6 +21,7 @@ module "casper" {
   app-tls-s3-access-key-id     = "${var.aws_access_key_id}"
   app-tls-s3-secret-access-key = "${var.aws_secret_access_key}"
   app-dns-name                 = "${var.app-dns-name}"
+  app-use-route53-domain       = "${var.app-use-route53-domain}"
   app-instance-group           = "${var.app-instance-group}"
   olmis-db-instance-class      = "${var.olmis-db-instance-class}"
   olmis-db-username            = "${var.olmis-db-username}"

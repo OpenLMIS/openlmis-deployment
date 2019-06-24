@@ -39,6 +39,18 @@ variable "app-dns-name" {
   description = "The DNS name associated to the app instance"
 }
 
+variable "app-use-route53-domain" {
+  type        = "string"
+  description = "Whether to use route53 for DNS"
+  default     = false
+}
+
+variable "app-route53-zone-name" {
+  type        = "string"
+  description = "The route53 hosted zone name to use"
+  default     = ""
+}
+
 variable "app-instance-group" {
   type        = "string"
   description = "The deployment group to place the app host. Will dictate what Ansible playbooks can ran on it"
