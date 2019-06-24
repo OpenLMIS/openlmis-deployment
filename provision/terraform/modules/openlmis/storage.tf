@@ -16,6 +16,6 @@ resource "aws_db_instance" "rds" {
   skip_final_snapshot    = true
 
   tags {
-    BillTo = "OpenLMIS"
+    BillTo = "${var.bill-to}"
   }
 }

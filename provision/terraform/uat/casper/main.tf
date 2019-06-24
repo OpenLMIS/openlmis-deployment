@@ -14,6 +14,7 @@ module "casper" {
   source = "../../modules/openlmis"
 
   name                         = "${var.name}"
+  bill-to                      = "${var.bill-to}"
   app-instance-ssh-user        = "${var.app-instance-ssh-user}"
   docker-ansible-dir           = "${var.docker-ansible-dir}"
   docker-tls-port              = "${var.docker-tls-port}"

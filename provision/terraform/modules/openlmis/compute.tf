@@ -13,13 +13,13 @@ resource "aws_instance" "app" {
 
   tags {
     Name        = "${var.name}-env"
-    BillTo      = "OpenLMIS"
+    BillTo      = "${var.bill-to}"
     Type        = "Demo"
     DeployGroup = "${var.app-instance-group}"
   }
 
   volume_tags {
-    BillTo = "OpenLMIS"
+    BillTo = "${var.bill-to}"
     Type   = "Demo"
   }
 }

@@ -1,5 +1,7 @@
 name = "casper"
 
+bill-to = "Casper"
+
 app-instance-ssh-user = "ubuntu"
 
 docker-ansible-dir = "../../../ansible/"

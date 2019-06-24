@@ -3,6 +3,12 @@ variable "name" {
   description = "Name of the environment"
 }
 
+variable "bill-to" {
+  type        = "string"
+  description = "Which project to bill the provisioned resources"
+  default     = "OpenLMIS"
+}
+
 variable "app-instance-ssh-user" {
   type        = "string"
   description = "The name of the user to connect as in the app host"
