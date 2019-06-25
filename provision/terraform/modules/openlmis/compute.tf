@@ -1,7 +1,7 @@
 resource "aws_instance" "app" {
   ami                    = "ami-cd0f5cb6"
   instance_type          = "m5.large"
-  key_name               = "TestEnvDockerHosts"
+  key_name               = "${var.app-instance-ssh-key-name}"
   subnet_id              = "subnet-2b27c406"
   vpc_security_group_ids = ["sg-330c8549"]
 

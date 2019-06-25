@@ -13,6 +13,11 @@ variable "app-instance-ssh-user" {
   description = "The name of the user to connect as in the app host"
 }
 
+variable "app-instance-ssh-key-name" {
+  type        = "string"
+  description = "The name of the AWS key pair to use for the instance"
+}
+
 variable "docker-ansible-dir" {
   type        = "string"
   description = "The path to the directory containing the playbook for installing docker"
