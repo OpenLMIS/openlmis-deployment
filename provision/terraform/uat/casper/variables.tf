@@ -44,6 +44,11 @@ variable "app-use-route53-domain" {
   default     = false
 }
 
+variable "app-route53-zone-name" {
+  type        = "string"
+  description = "The DNS name for a route53 hosted zone already set up in AWS. app-dns-name should be a subdomain of this."
+}
+
 variable "app-instance-group" {
   type        = "string"
   description = "The deployment group to place the app host. Will dictate what Ansible playbooks can ran on it"

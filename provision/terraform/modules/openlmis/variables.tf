@@ -47,7 +47,7 @@ variable "app-use-route53-domain" {
 
 variable "app-route53-zone-name" {
   type        = "string"
-  description = "The route53 hosted zone name to use"
+  description = "The DNS name for a route53 hosted zone already set up in AWS. app-dns-name should be a subdomain of this."
   default     = ""
 }
 
