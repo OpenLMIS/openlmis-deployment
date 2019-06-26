@@ -15,6 +15,7 @@ module "casper" {
 
   name                         = "${var.name}"
   bill-to                      = "${var.bill-to}"
+  aws-tls-cert-domain          = "${var.aws-tls-cert-domain}"
   app-instance-ssh-user        = "${var.app-instance-ssh-user}"
   app-instance-ssh-key-name    = "${var.app-instance-ssh-key-name}"
   docker-ansible-dir           = "${var.docker-ansible-dir}"

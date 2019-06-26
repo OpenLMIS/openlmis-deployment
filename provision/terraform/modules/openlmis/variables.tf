@@ -9,6 +9,12 @@ variable "bill-to" {
   default     = "OpenLMIS"
 }
 
+variable "aws-tls-cert-domain" {
+  type        = "string"
+  description = "Domain name of a TLS certificate in AWS Certificate Manager. It is probably *.app-route53-zone-name if that is set."
+  default     = "*.openlmis.org"
+}
+
 variable "app-instance-ssh-user" {
   type        = "string"
   description = "The name of the user to connect as in the app host"

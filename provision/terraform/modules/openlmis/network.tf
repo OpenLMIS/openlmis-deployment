@@ -1,3 +1,8 @@
+data "aws_acm_certificate" "this" {
+  domain   = "${var.aws-tls-cert-domain}"
+  statuses = ["ISSUED"]
+}
+
 resource "aws_elb" "elb" {
   name      = "${var.name}-env-elb"
   instances = ["${aws_instance.app.id}"]
@@ -18,7 +23,7 @@ resource "aws_elb" "elb" {
   listener {
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-east-1:386835390540:certificate/bf52023b-66cc-472c-adc3-b8279b4daf86"
+    ssl_certificate_id = "${data.aws_acm_certificate.this.arn}"
     instance_port      = 80
     instance_protocol  = "http"
   }
