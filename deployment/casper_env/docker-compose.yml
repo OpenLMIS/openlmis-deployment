@@ -129,15 +129,6 @@ services:
       - 'service-config:/config'
     depends_on: [log]
 
-  db:
-    image: openlmis/postgres:${OL_POSTGRES_VERSION}
-    env_file: settings.env
-    networks:
-      default:
-        aliases:
-          - olmis-db
-    depends_on: [consul]
-
   log:
     image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
     volumes:
