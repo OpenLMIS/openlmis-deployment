@@ -1,3 +1,5 @@
 tmp/
 .idea/
 .terraform/
+*.swp
+*.swo

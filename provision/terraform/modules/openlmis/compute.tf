@@ -1,7 +1,7 @@
 resource "aws_instance" "app" {
   ami                    = "ami-cd0f5cb6"
   instance_type          = "m5.large"
-  key_name               = "TestEnvDockerHosts"
+  key_name               = "${var.app-instance-ssh-key-name}"
   subnet_id              = "subnet-2b27c406"
   vpc_security_group_ids = ["sg-330c8549"]
 
@@ -13,13 +13,13 @@ resource "aws_instance" "app" {
 
   tags {
     Name        = "${var.name}-env"
-    BillTo      = "OpenLMIS"
+    BillTo      = "${var.bill-to}"
     Type        = "Demo"
     DeployGroup = "${var.app-instance-group}"
   }
 
   volume_tags {
-    BillTo = "OpenLMIS"
+    BillTo = "${var.bill-to}"
     Type   = "Demo"
   }
 }

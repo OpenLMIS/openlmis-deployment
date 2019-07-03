@@ -6,7 +6,6 @@ variable "name" {
 variable "bill-to" {
   type        = "string"
   description = "Which project to bill the provisioned resources"
-  default     = "OpenLMIS"
 }
 
 variable "aws-tls-cert-domain" {
@@ -23,7 +22,6 @@ variable "app-instance-ssh-user" {
 variable "app-instance-ssh-key-name" {
   type        = "string"
   description = "The name of the AWS key pair to use for the instance"
-  default     = "TestEnvDockerHosts"
 }
 
 variable "docker-ansible-dir" {
@@ -36,12 +34,12 @@ variable "docker-tls-port" {
   description = "The TCP port The Docker Daemon is listening for TLS traffic"
 }
 
-variable "app-tls-s3-access-key-id" {
+variable "aws_access_key_id" {
   type        = "string"
   description = "The AWS access key ID to use to backup generated Docker TLS files"
 }
 
-variable "app-tls-s3-secret-access-key" {
+variable "aws_secret_access_key" {
   type        = "string"
   description = "The AWS secrect access key to use to backup generated Docker TLS files"
 }
@@ -60,7 +58,6 @@ variable "app-use-route53-domain" {
 variable "app-route53-zone-name" {
   type        = "string"
   description = "The DNS name for a route53 hosted zone already set up in AWS. app-dns-name should be a subdomain of this."
-  default     = ""
 }
 
 variable "app-instance-group" {
@@ -82,3 +79,4 @@ variable "olmis-db-password" {
   type        = "string"
   description = "The PostgreSQL database password."
 }
+

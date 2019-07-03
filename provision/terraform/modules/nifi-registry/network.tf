@@ -120,7 +120,7 @@ resource "aws_elb" "nr-elb" {
   }
 
   tags {
-    BillTo = "OpenLMIS"
+    BillTo = "${var.bill-to}"
     Type   = "Demo"
   }
 }
