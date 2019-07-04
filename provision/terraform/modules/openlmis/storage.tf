@@ -5,7 +5,8 @@ resource "aws_db_instance" "rds" {
   allocated_storage      = 10
   storage_type           = "gp2"
   engine                 = "postgres"
-  engine_version         = "9.4.15"
+  engine_version         = "9.6.14"
+  allow_major_version_upgrade = true
   instance_class         = "${var.olmis-db-instance-class}"
   name                   = "open_lmis"
   username               = "${var.olmis-db-username}"
