@@ -8,7 +8,7 @@ resource "aws_elb" "elb" {
   instances = ["${aws_instance.app.id}"]
 
   subnets                   = ["subnet-2b27c406", "subnet-357ead7c"]
-  security_groups           = ["sg-330c8549", "sg-460a833c"]
+  security_groups           = ["${var.vpc-security-group-id}", "sg-460a833c"]
   cross_zone_load_balancing = true
   idle_timeout              = 60
   connection_draining       = true
@@ -26,6 +26,27 @@ resource "aws_elb" "elb" {
     ssl_certificate_id = "${data.aws_acm_certificate.this.arn}"
     instance_port      = 80
     instance_protocol  = "http"
+  }
+
+  listener {
+    lb_port           = 8000
+    lb_protocol       = "http"
+    instance_port     = 8000
+    instance_protocol = "http"
+  }
+
+  listener {
+    lb_port           = 8080
+    lb_protocol       = "http"
+    instance_port     = 8080
+    instance_protocol = "http"
+  }
+
+  listener {
+    lb_port           = 8083
+    lb_protocol       = "http"
+    instance_port     = 8083
+    instance_protocol = "http"
   }
 
   listener {

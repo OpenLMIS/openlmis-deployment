@@ -82,3 +82,9 @@ variable "olmis-db-password" {
   type        = "string"
   description = "The PostgreSQL database password."
 }
+
+variable "vpc-security-group-id" {
+  type        = "string"
+  description = "ID of the security group, specifying inbound/outbound rules"
+  default     = "sg-330c8549"
+}

@@ -3,7 +3,7 @@ resource "aws_instance" "app" {
   instance_type          = "m5.large"
   key_name               = "${var.app-instance-ssh-key-name}"
   subnet_id              = "subnet-2b27c406"
-  vpc_security_group_ids = ["sg-330c8549"]
+  vpc_security_group_ids = ["${var.vpc-security-group-id}"]
 
   root_block_device = {
     volume_type           = "gp2"

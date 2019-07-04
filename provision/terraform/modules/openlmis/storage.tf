@@ -11,7 +11,7 @@ resource "aws_db_instance" "rds" {
   username               = "${var.olmis-db-username}"
   password               = "${var.olmis-db-password}"
   db_subnet_group_name   = "default-vpc-fabce99d"
-  vpc_security_group_ids = ["sg-330c8549"]
+  vpc_security_group_ids = ["${var.vpc-security-group-id}"]
   apply_immediately      = true
   skip_final_snapshot    = true
 

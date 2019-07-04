@@ -19,3 +19,5 @@ app-instance-group = "docker-hosts"
 olmis-db-instance-class = "db.t2.medium"
 olmis-db-username="pHvNEhePnLpdATZe"
 olmis-db-password="xkRFqrFD6qSq7wjH"
+
+vpc-security-group-id="sg-0ac523a643cead168"
