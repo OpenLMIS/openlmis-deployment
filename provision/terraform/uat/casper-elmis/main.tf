@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     "bucket" = "openlmis-terraform-states"
-    "key"    = "casper.tf"
+    "key"    = "casper-elmis.tf"
     "region" = "us-east-1"
   }
 }
@@ -10,7 +10,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "casper" {
+module "casper-elmis" {
   source = "../../modules/openlmis"
 
   name                         = "${var.name}"
