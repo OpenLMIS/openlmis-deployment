@@ -3,7 +3,7 @@ name = "casper-elmis"
 bill-to = "Casper"
 
 app-instance-ssh-user = "ubuntu"
-app-instance-ssh-key-name = "CasperELMISEnvDockerHost"
+app-instance-ssh-key-name = "CasperEnvDockerHost"
 
 docker-ansible-dir = "../../../ansible/"
 
