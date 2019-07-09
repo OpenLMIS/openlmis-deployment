@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://casper-elmis.a.openlmis.org:2376"
