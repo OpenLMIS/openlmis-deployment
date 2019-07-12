@@ -7,35 +7,35 @@
         <suffixPattern>[%15.15thread] %level %logger %msg</suffixPattern>
     </appender>
 
-    <logger name="org.openlmis.auth" level="INFO" additivity="false">
+    <logger name="org.openlmis.auth" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.cce" level="INFO" additivity="false">
+    <logger name="org.openlmis.cce" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.fulfillment" level="INFO" additivity="false">
+    <logger name="org.openlmis.fulfillment" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.notification" level="INFO" additivity="false">
+    <logger name="org.openlmis.notification" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.referencedata" level="INFO" additivity="false">
+    <logger name="org.openlmis.referencedata" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.report" level="INFO" additivity="false">
+    <logger name="org.openlmis.report" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.requisition" level="INFO" additivity="false">
+    <logger name="org.openlmis.requisition" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.stockmanagement" level="INFO" additivity="false">
+    <logger name="org.openlmis.stockmanagement" level="WARN" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
