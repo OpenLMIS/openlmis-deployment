@@ -10,4 +10,5 @@ cd ./build
 
 /usr/local/bin/docker-compose down -v
 /usr/local/bin/docker-compose -f docker-compose.builder.yml build image
+docker network inspect casper_elmis_pipeline_bridge &>/dev/null || docker network create --driver bridge casper_elmis_pipeline_bridge
 /usr/local/bin/docker-compose up -d
