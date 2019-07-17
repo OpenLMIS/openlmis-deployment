@@ -6,3 +6,9 @@
   with_items:
     - awscli
     - python-openssl
+    - postgresql
+    - postgresql-contrib
+    - libpq-dev
+    - python-psycopg2
+
+- include_tasks: install-postgresql-extensions.yml
