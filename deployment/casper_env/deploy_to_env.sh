@@ -10,5 +10,6 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 
 ../shared/restart.sh $1
 
+sleep 300
 docker pull openlmis/demo-data:casper
 /usr/bin/docker run --rm --env-file settings.env openlmis/demo-data:casper
