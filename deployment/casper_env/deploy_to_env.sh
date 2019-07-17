@@ -6,7 +6,6 @@ export DOCKER_CERT_PATH="${PWD}/credentials"
 
 ../shared/init_env_gh.sh
 
-cp .deployment-config/casper.env settings.env
 docker pull openlmis/demo-data:casper
 /usr/bin/docker run --rm --env-file settings.env openlmis/demo-data:casper
 
