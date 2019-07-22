@@ -29,4 +29,5 @@ module "casper-elmis" {
   olmis-db-instance-class      = "${var.olmis-db-instance-class}"
   olmis-db-username            = "${var.olmis-db-username}"
   olmis-db-password            = "${var.olmis-db-password}"
+  vpc-security-group-id        = "${var.vpc-security-group-id}"
 }

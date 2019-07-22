@@ -80,3 +80,7 @@ variable "olmis-db-password" {
   description = "The PostgreSQL database password."
 }
 
+variable "vpc-security-group-id" {
+  type        = "string"
+  description = "ID of the security group, specifying inbound/outbound rules"
+}
