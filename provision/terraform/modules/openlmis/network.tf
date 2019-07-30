@@ -43,6 +43,13 @@ resource "aws_elb" "elb" {
   }
 
   listener {
+    lb_port           = 3000
+    lb_protocol       = "http"
+    instance_port     = 3000
+    instance_protocol = "http"
+  }
+
+  listener {
     lb_port           = 22
     lb_protocol       = "tcp"
     instance_port     = 22
