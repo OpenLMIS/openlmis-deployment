@@ -98,9 +98,9 @@ variable "nr-assign-elastic-ip" {
   description = "Whether to assign an elastic IP to the instance"
 }
 
-variable "nr-acm-certificate-arn" {
+variable "nr-aws-tls-cert-domain" {
   type        = "string"
-  description = "ARN of the Amazon certificate to use on the loadbalancer"
+  description = "Domain name of a TLS certificate in AWS Certificate Manager. It is probably *.nr-route53-zone-name if that is set."
 }
 
 variable "nr-elb-subnets" {

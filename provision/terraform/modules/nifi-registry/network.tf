@@ -1,3 +1,8 @@
+data "aws_acm_certificate" "this" {
+  domain   = "${var.nr-aws-tls-cert-domain}"
+  statuses = ["ISSUED"]
+}
+
 resource "aws_security_group" "nifi-registry" {
   name        = "${var.nr-name}"
   description = "Allow http https ssh inbound, all outbound traffic"
@@ -92,7 +97,7 @@ resource "aws_elb" "nr-elb" {
   listener {
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "${var.nr-acm-certificate-arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.this.arn}"
     instance_port      = 80
     instance_protocol  = "http"
   }

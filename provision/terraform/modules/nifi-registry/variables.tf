@@ -62,7 +62,7 @@ variable "nr-ami" {
 
 variable "nr-vpc-name" {
   type        = "string"
-  description = "The name of the VPC to place NiFi Registry resources on AWS"
+  description = "The name of the VPC to place NiFi Registry resources on AWS. The EC2 instance will use a new security group within this VPC."
 }
 
 variable "nr-instance-group" {
@@ -82,7 +82,7 @@ variable "docker-ansible-dir" {
 
 variable "nr-dns-name" {
   type        = "string"
-  description = "The DNS name associated to NiFi Registry"
+  description = "The DNS name associated to NiFi Registry. Used by ansible/docker to "
 }
 
 variable "nr-tls-s3-access-key-id" {
@@ -106,9 +106,9 @@ variable "nr-assign-elastic-ip" {
   default     = true
 }
 
-variable "nr-acm-certificate-arn" {
+variable "nr-aws-tls-cert-domain" {
   type        = "string"
-  description = "ARN of the Amazon certificate to use on the loadbalancer"
+  description = "Domain name of a TLS certificate in AWS Certificate Manager. It is probably *.nr-route53-zone-name if that is set."
 }
 
 variable "nr-elb-subnets" {

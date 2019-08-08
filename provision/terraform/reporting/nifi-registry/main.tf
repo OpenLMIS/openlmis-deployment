@@ -32,7 +32,7 @@ module "nifi-registry" {
   nr-tls-s3-secret-access-key = "${var.aws_secret_access_key}"
   docker-tls-port             = "${var.docker-tls-port}"
   nr-assign-elastic-ip        = "${var.nr-assign-elastic-ip}"
-  nr-acm-certificate-arn      = "${var.nr-acm-certificate-arn}"
+  nr-aws-tls-cert-domain      = "${var.nr-aws-tls-cert-domain}"
   nr-elb-subnets              = "${var.nr-elb-subnets}"
   nr-use-route53-domain       = "${var.nr-use-route53-domain}"
   nr-route53-zone-name        = "${var.nr-route53-zone-name}"

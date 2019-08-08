@@ -16,6 +16,6 @@ nr-dns-name = "nifi-registry.openlmis.org"
 docker-tls-port = "2376"
 aws-region="us-east-1"
 nr-assign-elastic-ip= true
-nr-acm-certificate-arn= "arn:aws:acm:us-east-1:386835390540:certificate/b297cf7e-034c-4057-bd92-22526b24ca9d"
+nr-aws-tls-cert-domain = "*.uat.openlmis.org"
 nr-elb-subnets  = ["subnet-abddbfa4", "subnet-083e611da5b9f6b43"]
 nr-use-route53-domain = false
