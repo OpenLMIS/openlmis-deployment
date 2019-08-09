@@ -12,3 +12,4 @@
     - python-psycopg2
 
 - include_tasks: install-postgresql-extensions.yml
+  when: use_rds is defined

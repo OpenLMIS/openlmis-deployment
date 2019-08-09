@@ -58,6 +58,7 @@ cd ${var.docker-ansible-dir} && \
     -e olmis_db_password=${var.olmis-db-password} \
     -e olmis_db_instance_address=${aws_db_instance.rds.address} \
     -e olmis_db_instance_name=${aws_db_instance.rds.name} \
+    -e use_rds=true \
     --limit ${aws_instance.app.public_ip}
 EOF
   }
