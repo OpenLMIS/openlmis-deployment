@@ -116,6 +116,20 @@ resource "aws_elb" "nr-elb" {
     instance_protocol = "tcp"
   }
 
+  listener {
+    lb_port           = 18080
+    lb_protocol       = "tcp"
+    instance_port     = 18080
+    instance_protocol = "tcp"
+  }
+
+  listener {
+    lb_port           = 18443
+    lb_protocol       = "tcp"
+    instance_port     = 18443
+    instance_protocol = "tcp"
+  }
+
   health_check {
     target              = "TCP:22"
     healthy_threshold   = 10
