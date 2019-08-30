@@ -7,40 +7,40 @@
         <suffixPattern>[%15.15thread] %level %logger %msg</suffixPattern>
     </appender>
 
-    <logger name="org.openlmis.auth" level="WARN" additivity="false">
+    <logger name="org.openlmis.auth" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.cce" level="WARN" additivity="false">
+    <logger name="org.openlmis.cce" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.fulfillment" level="WARN" additivity="false">
+    <logger name="org.openlmis.fulfillment" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.notification" level="WARN" additivity="false">
+    <logger name="org.openlmis.notification" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.referencedata" level="WARN" additivity="false">
+    <logger name="org.openlmis.referencedata" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.report" level="WARN" additivity="false">
+    <logger name="org.openlmis.report" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.requisition" level="WARN" additivity="false">
+    <logger name="org.openlmis.requisition" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.stockmanagement" level="WARN" additivity="false">
+    <logger name="org.openlmis.stockmanagement" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
     <!-- Define the root logger log level -->
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="SYSLOG"/>
     </root>
 </configuration>
