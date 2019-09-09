@@ -1,3 +1,15 @@
+# Monitoring dashboards for OpenLMIS
+
+...
+
+# Old monitoring setup
+
+This section of the README documents code that is only available in the git commit history.
+To see the old setup, which had some features the current one does not, go back to commit [9a27ddc](https://github.com/OpenLMIS/openlmis-deployment/commit/9a27ddc).
+```
+$ git checkout 9a27ddc
+```
+
 **Note**:  The usage of this section no longer applies in our current Test and UAT environments.  A number of reasons factor into this
 decision to not utilize this monitoring setup for the time being, including:
 * Full configuration / learning curve was not realized
@@ -5,7 +17,7 @@ decision to not utilize this monitoring setup for the time being, including:
 sizeable CPU usage.
 * Existing infrastructure, Scalyr, is being used for instance/docker monitoring for many other OpenLMIS projects
 
-# Monitoring
+## Monitoring
 
 This section is preserved in-case we'd like to re-deploy Prometheus / Grafana.
 
@@ -15,7 +27,7 @@ The compose file was taken from https://github.com/vegasbrianc/prometheus and mo
 
 So please read this first: https://github.com/vegasbrianc/prometheus/blob/version-2/README.md
 
-# Currently existing monitor
+## Currently existing monitor
 
 http://uat-env-elb-1284865908.us-east-1.elb.amazonaws.com:3000/dashboard/db/test-docker-host
 
@@ -25,7 +37,7 @@ This is running in both test and UAT envs. But the web UI is exposed from UAT.
 
 It's configured to automatically restart, so you don't have to worry about system reboot.
 
-# How to add another docker host into the monitor
+## How to add another docker host into the monitor
 
 1.  ssh into the docker host that you want to monitor, find or create a suitable directory, then run:
 
