@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+
+  config-container:
+    build:
+      context: ./config
+    volumes:
+      - config-volume:/config
+
+  influxdb:
+    image: influxdb:${OL_INFLUXDB_VERSION}
+
+  telegraf:
+    image: telegraf:${OL_TELEGRAF_VERSION}
+    volumes:
+      - ./config/services/telegraf:/etc/telegraf
+    depends_on: [influxdb]
+
+  grafana:
+    image: grafana/grafana:${OL_GRAFANA_VERSION}
+    ports:
+      - 3000:3000
+    volumes:
+      - config-volume:/config
+    environment:
+      - GF_PATHS_PROVISIONING=/config/grafana/provisioning
+
+volumes:
+  config-volume:
+    external: false

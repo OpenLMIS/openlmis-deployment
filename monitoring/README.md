@@ -1,6 +1,13 @@
 # Monitoring dashboards for OpenLMIS
 
-...
+We use InfluxDB and Grafana to monitor Jenkins.
+To set up monitoring for the Jenkins server at `build.openlmis.org`, from this directory run:
+```
+$ docker-compose up -d
+```
+If you are running the monitoring locally, Grafana will be running at `localhost:3000`.
+The default username and password for Grafana are `admin|admin`.
+The dashboards in `config/services/grafana/dashboards/` will be loaded into Grafana by default.
 
 # Old monitoring setup
 
