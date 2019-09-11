@@ -5,7 +5,7 @@ data "aws_acm_certificate" "this" {
 
 resource "aws_security_group" "monitoring" {
   name        = "${var.name}"
-  description = "Allow http https ssh inbound, all outbound traffic"
+  description = "Allow http, https, ssh, docker tls, and port 3000 inbound, all outbound traffic"
   vpc_id      = "${data.aws_vpc.this.id}"
 
   ingress {
@@ -32,6 +32,13 @@ resource "aws_security_group" "monitoring" {
   ingress {
     from_port   = "${var.docker-tls-port}"
     to_port     = "${var.docker-tls-port}"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
