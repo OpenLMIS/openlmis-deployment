@@ -47,7 +47,7 @@ resource "aws_security_group" "monitoring" {
     from_port   = 8086
     to_port     = 8086
     protocol    = "tcp"
-    cidr_blocks = ["${data.aws_subnet.jenkins.cidr_block}"]
+    cidr_blocks = ["${data.aws_subnet.jenkins.cidr_block}", "${data.aws_subnet.jenkins-main.cidr_block}"]
   }
 
   egress {

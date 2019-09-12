@@ -11,6 +11,10 @@ data "aws_subnet" "this" {
   }
 }
 
+data "aws_subnet" "jenkins-main" {
+  id = "subnet-e49392cc"
+}
+
 data "aws_subnet" "jenkins" {
   filter {
     name   = "tag:Name"
