@@ -10,6 +10,10 @@ services:
 
   influxdb:
     image: influxdb:${OL_INFLUXDB_VERSION}
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb-volume:/var/lib/influxdb
 
   telegraf:
     image: telegraf:${OL_TELEGRAF_VERSION}
@@ -30,4 +34,6 @@ volumes:
   config-volume:
     external: false
   telegraf-config-volume:
+    external: false
+  influxdb-volume:
     external: false

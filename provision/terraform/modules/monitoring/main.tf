@@ -10,3 +10,10 @@ data "aws_subnet" "this" {
     values = ["test-env-subnet1"]
   }
 }
+
+data "aws_subnet" "jenkins" {
+  filter {
+    name   = "tag:Name"
+    values = ["Jenkins nodes subnet"]
+  }
+}
