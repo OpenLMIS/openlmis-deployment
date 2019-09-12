@@ -7,12 +7,14 @@ services:
     volumes:
       - config-volume:/config
       - telegraf-config-volume:/config/telegraf
+      - influxdb-config-volume:/config/influxdb
 
   influxdb:
     image: influxdb:${OL_INFLUXDB_VERSION}
     ports:
       - 8086:8086
     volumes:
+      - influxdb-config-volume:/etc/influxdb
       - influxdb-volume:/var/lib/influxdb
 
   telegraf:
@@ -34,6 +36,8 @@ volumes:
   config-volume:
     external: false
   telegraf-config-volume:
+    external: false
+  influxdb-config-volume:
     external: false
   influxdb-volume:
     external: false
