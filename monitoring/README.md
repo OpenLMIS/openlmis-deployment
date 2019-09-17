@@ -9,6 +9,15 @@ If you are running the monitoring locally, Grafana will be running at `localhost
 The default username and password for Grafana are `admin|admin`.
 The dashboards in `config/services/grafana/dashboards/` will be loaded into Grafana by default.
 
+## Monitoring Jenkins
+
+Data is collected from Jenkins in two ways:
+* Telegraf's [basic Jenkins source](https://github.com/influxdata/telegraf/tree/master/plugins/inputs/jenkins). It doesn't require any special Jenkins plugins, but it only exposes two pieces of data for each build:
+  * `duration`
+  * `result_code`
+* [This InfluxDB plugin](https://wiki.jenkins.io/display/JENKINS/InfluxDB+Plugin). It must be installed and configured on the Jenkins server, but it exposes the much more data for each build. A list of supported metrics and installation instructions are available on the linked wiki page.
+
+
 # Old monitoring setup
 
 This section of the README documents code that is only available in the git commit history.
