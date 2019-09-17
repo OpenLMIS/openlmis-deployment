@@ -2,7 +2,7 @@ name = "grafana"
 
 bill-to = "OpenLMIS"
 
-vpc-name = "TestEnvVPC"
+vpc-name = "JunkDrawerVPC"
 
 app-instance-ssh-user = "ubuntu"
 app-instance-ssh-key-name = "TestEnvDockerHosts"

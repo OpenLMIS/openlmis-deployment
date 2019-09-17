@@ -47,7 +47,14 @@ resource "aws_security_group" "monitoring" {
     from_port   = 8086
     to_port     = 8086
     protocol    = "tcp"
-    cidr_blocks = ["${data.aws_subnet.jenkins.cidr_block}", "${data.aws_subnet.jenkins-main.cidr_block}"]
+    cidr_blocks = ["${data.aws_subnet.jenkins-main.cidr_block}"]
+  }
+
+  ingress {
+    from_port   = 8
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -75,7 +82,7 @@ resource "aws_elb" "elb" {
   name      = "${var.name}-env-elb"
   instances = ["${aws_instance.app.id}"]
 
-  subnets                   = ["${data.aws_subnet.this.id}"]
+  subnets                   = ["${data.aws_subnet.jenkins-main.id}"]
 
   security_groups           = ["${aws_security_group.monitoring.id}"]
   cross_zone_load_balancing = true
@@ -108,6 +115,13 @@ resource "aws_elb" "elb" {
     lb_port           = "${var.docker-tls-port}"
     lb_protocol       = "tcp"
     instance_port     = 2376
+    instance_protocol = "tcp"
+  }
+
+  listener {
+    lb_port           = 8086
+    lb_protocol       = "tcp"
+    instance_port     = 8086
     instance_protocol = "tcp"
   }
 

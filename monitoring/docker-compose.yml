@@ -16,6 +16,8 @@ services:
     volumes:
       - influxdb-config-volume:/etc/influxdb
       - influxdb-volume:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=jenkinsplugin
 
   telegraf:
     image: telegraf:${OL_TELEGRAF_VERSION}
@@ -40,4 +42,4 @@ volumes:
   influxdb-config-volume:
     external: false
   influxdb-volume:
-    external: false
+    external: true

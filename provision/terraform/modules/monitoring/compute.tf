@@ -2,7 +2,7 @@ resource "aws_instance" "app" {
   ami                    = "ami-cd0f5cb6"
   instance_type          = "m5.large"
   key_name               = "${var.app-instance-ssh-key-name}"
-  subnet_id              = "${data.aws_subnet.this.id}"
+  subnet_id              = "${data.aws_subnet.jenkins-main.id}"
   vpc_security_group_ids = ["${aws_security_group.monitoring.id}"]
 
   root_block_device = {
