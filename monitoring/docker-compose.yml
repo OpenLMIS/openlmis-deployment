@@ -19,6 +19,15 @@ services:
     environment:
       - INFLUXDB_DB=jenkinsplugin
 
+  prometheus:
+    image: prom/prometheus:${OL_PROMETHEUS_VERSION}
+    ports:
+      - 9090:9090
+    command: [ "--config.file=/config/prometheus/prometheus.yml" ]
+    volumes:
+      - config-volume:/config
+      - prometheus-volume:/prometheus
+
   telegraf:
     image: telegraf:${OL_TELEGRAF_VERSION}
     volumes:
@@ -42,4 +51,6 @@ volumes:
   influxdb-config-volume:
     external: false
   influxdb-volume:
+    external: true
+  prometheus-volume:
     external: true
