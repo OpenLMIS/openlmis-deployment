@@ -11,5 +11,7 @@ reportingRepo=$1
 cd "$reportingRepo/$REPORTING_DIR_NAME"
 $DOCKER_COMPOSE_BIN kill
 $DOCKER_COMPOSE_BIN down -v
+docker rm $(docker ps -aq)
+docker rmi $(docker images -aq)
 $DOCKER_COMPOSE_BIN build --no-cache
 $DOCKER_COMPOSE_BIN up --force-recreate -d
