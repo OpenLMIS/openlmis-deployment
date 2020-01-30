@@ -8,7 +8,7 @@ if $START_EC2_INSTANCE; then
 fi
 
 export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://functional-test.openlmis.org:2376"
+export DOCKER_HOST="tcp://functional-test2-env-elb-146397497.us-east-1.elb.amazonaws.com:2376"
 export DOCKER_CERT_PATH="${PWD}/credentials"
 
 ../shared/init_env_gh.sh
