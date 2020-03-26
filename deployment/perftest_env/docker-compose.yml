@@ -11,7 +11,7 @@ services:
       - "53"
 
   nginx:
-    image: openlmis/nginx:5
+    image: openlmis/nginx:${OL_NGINX_VERSION}
     ports:
       - "80:80"
     env_file: settings.env
@@ -23,13 +23,13 @@ services:
     depends_on: [consul]
 
   reference-ui:
-    image: openlmis/reference-ui:5.1.6-RC2
+    image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
 
   requisition:
     restart: always
-    image: openlmis/requisition:8.2.1-RC2
+    image: openlmis/requisition:${OL_REQUISITION_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms1024m -Xmx1024m -Dlogging.config=/config/log/logback.xml'
@@ -41,7 +41,7 @@ services:
 
   referencedata:
     restart: always
-    image: openlmis/referencedata:15.0.0-RC1
+    image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms2048m -Xmx2048m -Dlogging.config=/config/log/logback.xml'
@@ -53,7 +53,7 @@ services:
 
   auth:
     restart: always
-    image: openlmis/auth:4.2.0
+    image: openlmis/auth:${OL_AUTH_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms1024m -Xmx1024m -Dlogging.config=/config/log/logback.xml'
@@ -66,7 +66,7 @@ services:
 
   notification:
     restart: always
-    image: openlmis/notification:4.2.0
+    image: openlmis/notification:${OL_NOTIFICATION_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms512m -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -78,7 +78,7 @@ services:
 
   fulfillment:
     restart: always
-    image: openlmis/fulfillment:8.1.0
+    image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms512m -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -90,7 +90,7 @@ services:
 
   cce:
     restart: always
-    image: openlmis/cce:1.1.0
+    image: openlmis/cce:${OL_CCE_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms512m -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -102,7 +102,7 @@ services:
 
   stockmanagement:
     restart: always
-    image: openlmis/stockmanagement:5.0.1
+    image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms512m -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -114,7 +114,7 @@ services:
 
   report:
     restart: always
-    image: openlmis/report:1.1.4
+    image: openlmis/report:${OL_REPORT_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms512m -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -126,7 +126,7 @@ services:
 
   hapifhir:
     restart: always
-    image: openlmis/hapifhir:2.0.0
+    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xms512m -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -138,7 +138,7 @@ services:
 
   log:
     restart: always
-    image: openlmis/rsyslog:1
+    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
     volumes:
       - 'syslog:/var/log'
     depends_on:
