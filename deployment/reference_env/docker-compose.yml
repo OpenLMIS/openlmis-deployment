@@ -22,8 +22,8 @@ services:
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
 
-  reference-ui:
-    image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
+  covid-ui:
+    image: openlmis/covid-ui:${OL_COVID_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
 
@@ -161,14 +161,6 @@ services:
       context: ./config
     volumes:
       - service-config:/config
-
-  ftp:
-    image: hauptmedia/proftpd
-    ports:
-      - "21:21"
-      - "20:20"
-    env_file: settings.env
-    depends_on: [consul]
 
   redis:
     image: redis:3.2.12
