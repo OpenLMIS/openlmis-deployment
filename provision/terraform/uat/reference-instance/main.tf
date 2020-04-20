@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    "bucket" = "openlmis-terraform-states"
+    "bucket" = "openlmis-covid-terraform-states"
     "key"    = "reference-instance.tf"
     "region" = "us-east-1"
   }
