@@ -1,0 +1,2 @@
+---
+docker_tls_ca_subject: "/C={{ docker_tls_ca_country }}/ST={{ docker_tls_ca_province }}/L={{ docker_tls_ca_locality }}/O={{ docker_tls_ca_org }}/OU={{ docker_tls_ca_org_unit }}/CN={{ docker_tls_dns_name }}/emailAddress={{ docker_tls_ca_email_address }}"

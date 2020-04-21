@@ -2,11 +2,11 @@ name = "reference-instance"
 
 app-instance-ssh-user = "ubuntu"
 
-docker-ansible-dir = "../../../ansible/"
+docker-ansible-dir = "../../../ansible-reference-instance/"
 
 docker-tls-port = "2376"
 
-app-dns-name = "stayathome.openlmis.org"
+app-dns-name = "covid-ref.openlmis.org"
 
 app-instance-group = "docker-hosts"
 

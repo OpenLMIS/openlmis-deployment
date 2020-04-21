@@ -1,0 +1,23 @@
+  - postgresql_ext:  ## instal postgis extension
+      name: postgis
+      db: "{{olmis_db_instance_name}}"
+      login_host: "{{olmis_db_instance_address}}"
+      login_user: "{{olmis_db_username}}"
+      login_password: "{{olmis_db_password}}"
+      state: present
+
+  - postgresql_ext:  ## drop uuid-ossp extension
+      name: uuid-ossp
+      db: "{{olmis_db_instance_name}}"
+      login_host: "{{olmis_db_instance_address}}"
+      login_user: "{{olmis_db_username}}"
+      login_password: "{{olmis_db_password}}"
+      state: absent
+
+  - postgresql_ext:  ## install uuid-ossp extension again
+      name: uuid-ossp
+      db: "{{olmis_db_instance_name}}"
+      login_host: "{{olmis_db_instance_address}}"
+      login_user: "{{olmis_db_username}}"
+      login_password: "{{olmis_db_password}}"
+      state: present

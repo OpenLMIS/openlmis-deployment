@@ -1,0 +1,4 @@
+[Service]
+# Make sure the ExecStart directive is emptied
+ExecStart=
+ExecStart={{ docker_dockerd_bin_path }} -H unix:///var/run/docker.sock -H tcp://{{ docker_dockerd_bind_address }}:{{ docker_dockerd_tls_port }} {% if docker_dockerd_enable_tls %}{% if docker_dockerd_verify_clients %}--tlsverify --tlscacert={{ docker_tls_dir }}/ca/cert.pem {% endif %}--tlscert={{ docker_tls_dir }}/server/cert.pem --tlskey={{ docker_tls_dir }}/server/key.pem{% endif %}
