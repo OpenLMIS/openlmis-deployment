@@ -22,8 +22,8 @@ services:
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
 
-  reference-instance-ui:
-    image: openlmis/reference-instance-ui:${REFERENCE_INSTANCE_UI}
+  covid-ui:
+    image: openlmis/covid-ui:${OL_COVID_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
 
