@@ -114,7 +114,7 @@ services:
 
   pcmt-integration:
     restart: always
-    image: openlmis/pcmt_integration:${OL_PCMT_INTEGRATION_VERSION}
+    image: openlmis/pcmt-integration:${OL_PCMT_INTEGRATION_VERSION}
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
