@@ -7,7 +7,7 @@ export DOCKER_COMPOSE_BIN=/usr/local/bin/docker-compose
 export DOCKER_CERT_PATH="${PWD}/../../../credentials/covid-reporting"
 export REPORTING_DIR_NAME=covid-reporting
 
-distroRepo=$1
+distro_repo=$1
 
 docker volume create pgdata
 
