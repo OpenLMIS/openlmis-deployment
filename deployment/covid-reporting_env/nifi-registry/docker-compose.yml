@@ -33,7 +33,7 @@ services:
     volumes:
       - shared-config:/config
     command: >
-      bash -c "cp -r /config/nifi-registry/flow_storage/* . &&
+      bash -c "cp -r /config/nifi-registry/* flow_storage &&
           /opt/nifi-registry/scripts/start.sh"
     # logging:
     #   driver: syslog
