@@ -32,9 +32,6 @@ services:
       - "${NIFI_REGISTRY_HTTPS_PORT}:18443"
     volumes:
       - shared-config:/config
-    command: >
-      bash -c "mkdir -p flow_storage && cp -r /config/nifi-registry/* flow_storage &&
-          /opt/nifi-registry/scripts/start.sh"
     # logging:
     #   driver: syslog
     #   options:
