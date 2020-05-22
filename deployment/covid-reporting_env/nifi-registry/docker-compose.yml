@@ -32,6 +32,9 @@ services:
       - "${NIFI_REGISTRY_HTTPS_PORT}:18443"
     volumes:
       - shared-config:/config
+    command: >
+      bash -c "cp -r /config/nifi-registry/* . &&
+          /opt/nifi-registry/scripts/start.sh"
     # logging:
     #   driver: syslog
     #   options:
