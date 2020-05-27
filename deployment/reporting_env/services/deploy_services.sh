@@ -7,7 +7,7 @@ export DOCKER_COMPOSE_BIN=/usr/local/bin/docker-compose
 export DOCKER_CERT_PATH="${PWD}/credentials"
 export REPORTING_DIR_NAME=reporting
 
-../shared/init_env_gh.sh
+../../shared/init_env_gh.sh
 
 reportingRepo=$1
 
