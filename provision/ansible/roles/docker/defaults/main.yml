@@ -12,7 +12,7 @@ docker_tls_ca_cert_path: "{{ docker_tls_dir }}/ca-cert.pem"
 docker_tls_server_cert_path: "{{ docker_tls_dir }}/server-cert.pem"
 docker_tls_server_key_path: "{{ docker_tls_dir }}/server-key.pem"
 docker_tls_key_size: 4096
-docker_tls_expiry_days: 365
+docker_tls_expiry_days: 1095
 docker_tls_dns_name: "docker"
 docker_tls_ca_country: "US"
 docker_tls_ca_province: "New York"
