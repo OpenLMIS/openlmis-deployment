@@ -6,7 +6,7 @@ docker-ansible-dir = "../../../ansible/"
 
 docker-tls-port = "2376"
 
-app-dns-name = "demo-drc.openlmis.org"
+app-dns-name = "drc.openlmis.org"
 
 app-instance-group = "docker-hosts"
 
