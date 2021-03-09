@@ -26,6 +26,11 @@ services:
     image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
+    logging:
+      driver: "json-file"
+      options:
+        max-file: 5
+        max-size: 1m
 
   requisition:
     restart: always
