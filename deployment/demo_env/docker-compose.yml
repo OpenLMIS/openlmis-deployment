@@ -29,8 +29,8 @@ services:
     logging:
       driver: 'json-file'
       options:
-        max-file: '2'
-        max-size: '10k'
+        max-file: '1'
+        max-size: '1g'
 
   requisition:
     restart: always

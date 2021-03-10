@@ -3,7 +3,7 @@
 // https://www.scalyr.com/help/scalyr-agent-2
 
 {
-  import_vars: [ "SCALYR_API_KEY", "SCALYR_HOSTNAME"],
+  import_vars: [ "SCALYR_API_KEY", "VIRTUAL_HOST"],
 
   // Enter a "Write Logs" api key for your account. These are available at https://www.scalyr.com/keys
   api_key: "$SCALYR_API_KEY",
@@ -12,7 +12,7 @@
   // can be used to filter data from a particular server or group of servers.
   server_attributes: {
      // Fill in this field if you'd like to override the server's hostname.
-     serverHost: "$SCALYR_HOSTNAME",
+     serverHost: "$VIRTUAL_HOST",
      org: "OpenLMIS",
      
      // You can add whatever additional fields you'd like.
@@ -23,17 +23,14 @@
   logs: [
      { path: "/var/log/nginx/log/access.log", attributes: {parser: "accessLog"} },
      { path: "/var/log/nginx/log/error.log" } ,
-     { path: "/var/log/demo*" },
+     { path: "/var/log/messages" },
   ],
 
   global_monitor_sample_interval: "5",
 
   monitors: [
     {
-      // https://www.scalyr.com/help/monitors/docker-monitor
-      // We dont want to send the logs from each container console because we aggregate them into specific files.
-      module: "scalyr_agent.builtin_monitors.docker_monitor",
-      metrics_only: "True"
+      module: "scalyr_agent.builtin_monitors.docker_monitor"
     }
   ]
 }
