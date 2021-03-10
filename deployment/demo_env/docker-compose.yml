@@ -30,7 +30,7 @@ services:
       driver: 'json-file'
       options:
         max-file: '2'
-        max-size: '50k'
+        max-size: '10k'
 
   requisition:
     restart: always
