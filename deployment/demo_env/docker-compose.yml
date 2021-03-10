@@ -143,6 +143,8 @@ services:
   db:
     image: openlmis/postgres:${OL_POSTGRES_VERSION}
     env_file: settings.env
+    volumes:
+        - pgdata:/var/lib/postgresql/data
     depends_on: [consul]
 
   log:
@@ -194,3 +196,5 @@ volumes:
     external: false
   service-config:
     external: false
+  pgdata:
+    external: true
