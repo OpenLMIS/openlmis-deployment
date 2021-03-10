@@ -23,7 +23,7 @@
   logs: [
      { path: "/var/log/nginx/log/access.log", attributes: {parser: "accessLog"} },
      { path: "/var/log/nginx/log/error.log" } ,
-     { path: "/var/log/demo-v3" },
+     { path: "/var/log/demo*" },
   ],
 
   global_monitor_sample_interval: "5",
