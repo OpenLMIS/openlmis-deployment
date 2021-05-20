@@ -48,7 +48,7 @@
     </logger>
 
     <!-- Define the root logger log level -->
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="SYSLOG"/>
     </root>
 </configuration>
