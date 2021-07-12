@@ -114,7 +114,6 @@ services:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
-      - 'extensions-config:/extensions'
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
