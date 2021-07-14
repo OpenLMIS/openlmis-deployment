@@ -54,6 +54,8 @@ services:
     
   extensions-config:
     image: openlmis/one-network-extensions-config:0.0.1-SNAPSHOT
+    volumes:
+      - 'extensions-config:/extensions'
 
   auth:
     restart: always
