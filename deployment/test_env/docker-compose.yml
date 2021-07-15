@@ -47,13 +47,15 @@ services:
       JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
-      - 'extensions-config:/extensions'
+      - 'referencedata-extension-config:/extensions'
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     
-  extensions-config:
+  referencedata-extension-config:
     image: openlmis/one-network-extensions-config:0.0.1-SNAPSHOT
+    volumes:
+      - 'referencedata-extension-config:/extensions'
     
   stockmanagement-extension-config:
     image: openlmis/one-network-stockmanagement-extension-config:0.0.1-SNAPSHOT
@@ -216,7 +218,7 @@ volumes:
     external: false
   service-config:
     external: false
-  extensions-config:
+  referencedata-extension-config:
     external: false
   stockmanagement-extension-config:
     external: false
