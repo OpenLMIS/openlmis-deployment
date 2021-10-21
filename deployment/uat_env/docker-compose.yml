@@ -53,12 +53,12 @@ services:
     command: ["/wait-for-postgres.sh", "/run.sh"]
   
   referencedata-extension-config:
-    image: openlmis/one-network-extensions-config:0.0.1-SNAPSHOT
+    image: openlmis/one-network-extensions-config:${OL_ONE_NETWORK_INTEGRATION_REFERENCEDATA_EXTENSION_VERSION}
     volumes:
       - 'referencedata-extension-config:/extensions'
     
   stockmanagement-extension-config:
-    image: openlmis/one-network-stockmanagement-extension-config:0.0.1-SNAPSHOT
+    image: openlmis/one-network-stockmanagement-extension-config:${OL_ONE_NETWORK_INTEGRATION_STOCKMANAGEMENT_EXTENSION_VERSION}
     volumes:
       - 'stockmanagement-extension-config:/extensions'                            
 
