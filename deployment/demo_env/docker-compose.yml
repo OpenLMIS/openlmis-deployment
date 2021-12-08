@@ -56,6 +56,16 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
 
+  referencedata-extension-config:
+    image: openlmis/one-network-extensions-config:${OL_ONE_NETWORK_INTEGRATION_REFERENCEDATA_EXTENSION_VERSION}
+    volumes:
+      - 'referencedata-extension-config:/extensions'
+    
+  stockmanagement-extension-config:
+    image: openlmis/one-network-stockmanagement-extension-config:${OL_ONE_NETWORK_INTEGRATION_STOCKMANAGEMENT_EXTENSION_VERSION}
+    volumes:
+      - 'stockmanagement-extension-config:/extensions'
+
   auth:
     restart: always
     image: openlmis/auth:${OL_AUTH_VERSION}
