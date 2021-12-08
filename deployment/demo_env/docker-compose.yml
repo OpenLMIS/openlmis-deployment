@@ -140,6 +140,16 @@ services:
       - 'service-config:/config'
     depends_on: [log]
 
+  one-network-integration-service:
+    image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+    volumes:
+      - 'service-config:/config'
+    depends_on: [ log ]
+    command: [ "/run.sh" ] 
+
   db:
     image: openlmis/postgres:${OL_POSTGRES_VERSION}
     env_file: settings.env
