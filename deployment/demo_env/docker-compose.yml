@@ -208,3 +208,7 @@ volumes:
     external: false
   pgdata:
     external: true
+  referencedata-extension-config:
+    external: false
+  stockmanagement-extension-config:
+    external: false     
