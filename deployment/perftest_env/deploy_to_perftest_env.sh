@@ -2,7 +2,7 @@
 
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://perftest.openlmis.org:2376"
-export DOCKER_CERT_PATH="${PWD}/credentials"
+export DOCKER_CERT_PATH="${PWD}/.deployment-config/perftest-certs"
 
 ../shared/init_env_gh.sh
 
