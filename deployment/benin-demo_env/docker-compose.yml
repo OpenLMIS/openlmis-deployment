@@ -9,6 +9,11 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   nginx:
     image: openlmis/nginx:${OL_NGINX_VERSION}
@@ -21,11 +26,21 @@ services:
       - 'nginx-log:/var/log/nginx/log'
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   reference-ui:
     image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   requisition:
     restart: always
@@ -37,6 +52,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   referencedata:
     restart: always
@@ -48,6 +68,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   auth:
     restart: always
@@ -60,6 +85,11 @@ services:
       - 'service-config:/config'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   notification:
     restart: always
@@ -71,6 +101,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   fulfillment:
     restart: always
@@ -82,6 +117,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   cce:
     restart: always
@@ -93,6 +133,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   stockmanagement:
     restart: always
@@ -104,6 +149,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   report:
     restart: always
@@ -115,6 +165,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   diagnostics:
     restart: always
@@ -126,6 +181,11 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
 
   log:
@@ -136,6 +196,11 @@ services:
     depends_on:
       - service-configuration
       - consul
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   scalyr:
     image: openlmis/scalyr
@@ -147,12 +212,22 @@ services:
       - 'syslog:/var/log'
       - 'nginx-log:/var/log/nginx/log'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   service-configuration:
     build:
       context: ./config
     volumes:
       - service-config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   ftp:
     image: hauptmedia/proftpd
@@ -161,10 +236,20 @@ services:
       - "20:20"
     env_file: settings.env
     depends_on: [consul]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   redis:
     image: redis:3.2.12
     depends_on: [consul]
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
 volumes:
   syslog:
