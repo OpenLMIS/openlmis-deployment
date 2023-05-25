@@ -9,7 +9,7 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
-    logging:
+    logging: &logging
       driver: json-file
       options:
         max-size: "50m"
@@ -27,20 +27,14 @@ services:
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   reference-ui:
     image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   requisition:
     restart: always
@@ -54,10 +48,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   referencedata:
     restart: always
@@ -72,10 +63,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
     
   referencedata-extension-config:
     image: openlmis/one-network-extensions-config:0.0.1-SNAPSHOT
@@ -87,10 +75,7 @@ services:
     volumes:
       - 'stockmanagement-extension-config:/extensions'
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   auth:
     restart: always
@@ -105,10 +90,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   notification:
     restart: always
@@ -122,10 +104,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   fulfillment:
     restart: always
@@ -139,10 +118,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   cce:
     restart: always
@@ -156,10 +132,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   stockmanagement:
     restart: always
@@ -174,10 +147,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   report:
     restart: always
@@ -191,10 +161,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   hapifhir:
     restart: always
@@ -208,10 +175,7 @@ services:
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
     
   diagnostics:
     restart: always
@@ -224,10 +188,7 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   one-network-integration-service:
     image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
@@ -239,10 +200,7 @@ services:
     depends_on: [ log ]
     command: [ "/run.sh" ]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   log:
     restart: always
@@ -253,10 +211,7 @@ services:
       - service-configuration
       - consul
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   scalyr:
     image: openlmis/scalyr
@@ -269,10 +224,7 @@ services:
       - 'nginx-log:/var/log/nginx/log'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   service-configuration:
     build:
@@ -280,10 +232,7 @@ services:
     volumes:
       - service-config:/config
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   ftp:
     image: hauptmedia/proftpd
@@ -293,19 +242,11 @@ services:
     env_file: settings.env
     depends_on: [consul]
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
+      <<: *logging
 
   redis:
     image: redis:3.2.12
     depends_on: [consul]
-    logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "7"
 
 volumes:
   syslog:
