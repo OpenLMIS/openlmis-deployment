@@ -9,6 +9,11 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   nginx:
     image: openlmis/nginx:${OL_NGINX_VERSION}
@@ -21,16 +26,15 @@ services:
       - 'nginx-log:/var/log/nginx/log'
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
+    logging:
+      <<: *logging
 
   reference-ui:
     image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
     logging:
-      driver: 'json-file'
-      options:
-        max-file: '1'
-        max-size: '1g'
+      <<: *logging
 
   requisition:
     restart: always
@@ -43,6 +47,8 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   referencedata:
     restart: always
@@ -56,16 +62,22 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   referencedata-extension-config:
     image: openlmis/one-network-extensions-config:${OL_ONE_NETWORK_INTEGRATION_REFERENCEDATA_EXTENSION_VERSION}
     volumes:
       - 'referencedata-extension-config:/extensions'
+    logging:
+      <<: *logging
     
   stockmanagement-extension-config:
     image: openlmis/one-network-stockmanagement-extension-config:${OL_ONE_NETWORK_INTEGRATION_STOCKMANAGEMENT_EXTENSION_VERSION}
     volumes:
       - 'stockmanagement-extension-config:/extensions'
+    logging:
+      <<: *logging
 
   auth:
     restart: always
@@ -79,6 +91,8 @@ services:
       - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   notification:
     restart: always
@@ -91,6 +105,8 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   fulfillment:
     restart: always
@@ -103,6 +119,8 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   cce:
     restart: always
@@ -115,6 +133,8 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   stockmanagement:
     restart: always
@@ -128,6 +148,8 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   report:
     restart: always
@@ -140,6 +162,8 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
+    logging:
+      <<: *logging
 
   diagnostics:
     restart: always
@@ -151,6 +175,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   one-network-integration-service:
     image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
@@ -161,6 +187,8 @@ services:
       - 'service-config:/config'
     depends_on: [ log ]
     command: [ "/run.sh" ] 
+    logging:
+      <<: *logging
 
   db:
     image: openlmis/postgres:${OL_POSTGRES_VERSION}
@@ -168,6 +196,8 @@ services:
     volumes:
         - pgdata:/var/lib/postgresql/data
     depends_on: [consul]
+    logging:
+      <<: *logging
 
   log:
     restart: always
@@ -177,6 +207,8 @@ services:
     depends_on:
       - service-configuration
       - consul
+    logging:
+      <<: *logging
 
   scalyr:
     image: openlmis/scalyr
@@ -188,12 +220,16 @@ services:
       - 'syslog:/var/log'
       - 'nginx-log:/var/log/nginx/log'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
+    logging:
+      <<: *logging
 
   service-configuration:
     build:
       context: ./config
     volumes:
       - service-config:/config
+    logging:
+      <<: *logging
 
   ftp:
     image: hauptmedia/proftpd
@@ -202,6 +238,8 @@ services:
       - "${OL_FTP_PORT_20:-20}:20"
     env_file: settings.env
     depends_on: [consul]
+    logging:
+      <<: *logging
 
   redis:
     image: redis:3.2.12

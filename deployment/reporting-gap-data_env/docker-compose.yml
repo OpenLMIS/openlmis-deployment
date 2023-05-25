@@ -9,6 +9,11 @@ services:
       - "8400"
       - "8500:8500"
       - "53"
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "7"
 
   nginx:
     image: openlmis/nginx:${OL_NGINX_VERSION}
@@ -21,11 +26,15 @@ services:
       - 'nginx-log:/var/log/nginx/log'
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
+    logging:
+      <<: *logging
 
   reference-ui:
     image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
+    logging:
+      <<: *logging
 
   requisition:
     restart: always
@@ -37,6 +46,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   referencedata:
     restart: always
@@ -48,6 +59,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   auth:
     restart: always
@@ -60,6 +73,8 @@ services:
       - 'service-config:/config'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   notification:
     restart: always
@@ -71,6 +86,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   fulfillment:
     restart: always
@@ -82,6 +99,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   cce:
     restart: always
@@ -93,6 +112,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   stockmanagement:
     restart: always
@@ -104,6 +125,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   report:
     restart: always
@@ -115,6 +138,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
   diagnostics:
     restart: always
@@ -126,6 +151,8 @@ services:
     volumes:
       - 'service-config:/config'
     depends_on: [log]
+    logging:
+      <<: *logging
 
 
   log:
@@ -136,6 +163,8 @@ services:
     depends_on:
       - service-configuration
       - consul
+    logging:
+      <<: *logging
 
   scalyr:
     image: openlmis/scalyr
@@ -147,12 +176,16 @@ services:
       - 'syslog:/var/log'
       - 'nginx-log:/var/log/nginx/log'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
+    logging:
+      <<: *logging
 
   service-configuration:
     build:
       context: ./config
     volumes:
       - service-config:/config
+    logging:
+      <<: *logging
 
   ftp:
     image: hauptmedia/proftpd
@@ -161,6 +194,8 @@ services:
       - "${OL_FTP_PORT_20:-20}:20"
     env_file: settings.env
     depends_on: [consul]
+    logging:
+      <<: *logging
 
   redis:
     image: redis:3.2.12
