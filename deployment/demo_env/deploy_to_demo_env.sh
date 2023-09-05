@@ -2,7 +2,7 @@
 
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="demo-v3.openlmis.org:2376"
-export DOCKER_CERT_PATH="${PWD}/credentials"
+export DOCKER_CERT_PATH="${PWD}/.deployment-config/v3-demo-certs"
 
 if [ "$KEEP_OR_WIPE" == "wipe" ]; then
   echo "Removing pgdata volume"
