@@ -39,10 +39,6 @@
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.buq" level="DEBUG" additivity="false">
-        <appender-ref ref="SYSLOG"/>
-    </logger>
-
     <logger name="org.openlmis.onenetwork.integration" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
