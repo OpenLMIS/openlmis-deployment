@@ -30,7 +30,7 @@ services:
       <<: *logging
 
   reference-ui:
-    image: openlmismz/selv-v3-ui:1.1.8-SNAPSHOT
+    image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
     depends_on: [consul]
     logging:
