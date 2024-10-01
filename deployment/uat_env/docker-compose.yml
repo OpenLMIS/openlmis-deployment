@@ -208,7 +208,7 @@ services:
       - service-config:/config
 
   ftp:
-    image: hauptmedia/proftpd
+    image: driesva/proftpd
     ports:
       - "21:21"
       - "20:20"
