@@ -165,6 +165,20 @@ services:
     logging:
       <<: *logging
 
+  buq:
+    restart: always
+    image: openlmis/buq:${OL_BUQ_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [ log ]
+    command: [ "/wait-for-postgres.sh", "/run.sh" ]
+        logging:
+      <<: *logging
+
   diagnostics:
     restart: always
     image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
