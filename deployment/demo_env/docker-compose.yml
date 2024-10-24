@@ -176,7 +176,7 @@ services:
       - 'service-config:/config'
     depends_on: [ log ]
     command: [ "/wait-for-postgres.sh", "/run.sh" ]
-        logging:
+    logging:
       <<: *logging
 
   diagnostics:
