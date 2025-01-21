@@ -94,6 +94,19 @@ services:
     logging:
       <<: *logging
 
+  dhis2-integration:
+    image: openlmis/dhis2-integration:${OL_DHIS2INTEGRATION_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: demo-data,refresh-db
+    volumes:
+      - 'service-config:/config'
+    depends_on: [ log ]
+    command: [ "/wait-for-postgres.sh", "/run.sh" ]
+    logging:
+      <<: *logging
+
   notification:
     restart: always
     image: openlmis/notification:${OL_NOTIFICATION_VERSION}
