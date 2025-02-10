@@ -7,45 +7,44 @@
         <suffixPattern>[%15.15thread] %level %logger %msg</suffixPattern>
     </appender>
 
-    <!-- Individual loggers will inherit the DEBUG level from root logger -->
-    <logger name="org.openlmis.auth" additivity="false">
+    <logger name="org.openlmis.auth" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.cce" additivity="false">
+    <logger name="org.openlmis.cce" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.fulfillment" additivity="false">
+    <logger name="org.openlmis.fulfillment" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.notification" additivity="false">
+    <logger name="org.openlmis.notification" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.referencedata" additivity="false">
+    <logger name="org.openlmis.referencedata" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.report" additivity="false">
+    <logger name="org.openlmis.report" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.requisition" additivity="false">
+    <logger name="org.openlmis.requisition" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.stockmanagement" additivity="false">
+    <logger name="org.openlmis.stockmanagement" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <logger name="org.openlmis.buq" additivity="false">
+    <logger name="org.openlmis.buq" level="DEBUG" additivity="false">
         <appender-ref ref="SYSLOG"/>
     </logger>
 
-    <!-- Define the root logger log level to DEBUG -->
-    <root level="DEBUG">
+    <!-- Define the root logger log level to WARN -->
+    <root level="WARN">
         <appender-ref ref="SYSLOG"/>
     </root>
 </configuration>
