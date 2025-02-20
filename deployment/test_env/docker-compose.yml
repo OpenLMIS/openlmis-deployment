@@ -1,4 +1,4 @@
-version: '2'
+version: "3.3"
 services:
 
   consul:
@@ -16,7 +16,7 @@ services:
         max-file: "7"
 
   nginx:
-    image: openlmis/nginx:${OL_NGINX_VERSION}
+    image: openlmis/nginx:4
     ports:
       - "80:80"
     env_file: settings.env
@@ -29,19 +29,18 @@ services:
     logging:
       <<: *logging
 
-  reference-ui:
-    image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
+  ui:
+    image: openlmismw/ui:1.6.17-SNAPSHOT
     env_file: settings.env
     depends_on: [consul]
     logging:
       <<: *logging
 
   requisition:
-    restart: always
-    image: openlmis/requisition:${OL_REQUISITION_VERSION}
+    image: openlmis/requisition:8.3.6
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback-profiler.xml'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
       - 'service-config:/config'
@@ -51,35 +50,20 @@ services:
       <<: *logging
 
   referencedata:
-    restart: always
-    image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
+    image: openlmis/referencedata:15.2.5
     env_file: settings.env
     environment:
-      JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback.xml'
+      JAVA_OPTS: '-server -Xmx2048m -Dlogging.config=/config/log/logback-profiler.xml'
       spring_profiles_active: ${spring_profiles_active}
     volumes:
-      - 'referencedata-extension-config:/extensions'
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
       <<: *logging
-    
-  referencedata-extension-config:
-    image: openlmis/one-network-extensions-config:0.0.1-SNAPSHOT
-    volumes:
-      - 'referencedata-extension-config:/extensions'
-    
-  stockmanagement-extension-config:
-    image: openlmis/one-network-stockmanagement-extension-config:0.0.1-SNAPSHOT
-    volumes:
-      - 'stockmanagement-extension-config:/extensions'
-    logging:
-      <<: *logging
 
   auth:
-    restart: always
-    image: openlmis/auth:${OL_AUTH_VERSION}
+    image: openlmis/auth:4.3.3
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -93,8 +77,7 @@ services:
       <<: *logging
 
   notification:
-    restart: always
-    image: openlmis/notification:${OL_NOTIFICATION_VERSION}
+    image: openlmis/notification:4.3.3
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -107,8 +90,7 @@ services:
       <<: *logging
 
   fulfillment:
-    restart: always
-    image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
+    image: openlmis/fulfillment:9.0.4
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -120,9 +102,8 @@ services:
     logging:
       <<: *logging
 
-  cce:
-    restart: always
-    image: openlmis/cce:${OL_CCE_VERSION}
+  report:
+    image: openlmismw/reports:2.1.14-SNAPSHOT
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -135,23 +116,7 @@ services:
       <<: *logging
 
   stockmanagement:
-    restart: always
-    image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'stockmanagement-extension-config:/extensions'
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-    logging:
-      <<: *logging
-
-  report:
-    restart: always
-    image: openlmis/report:${OL_REPORT_VERSION}
+    image: openlmis/stockmanagement:5.1.9
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -160,26 +125,11 @@ services:
       - 'service-config:/config'
     depends_on: [log]
     command: ["/wait-for-postgres.sh", "/run.sh"]
-    logging:
-      <<: *logging
-
-  buq:
-    restart: always
-    image: openlmis/buq:${OL_BUQ_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [ log ]
-    command: [ "/wait-for-postgres.sh", "/run.sh" ]
     logging:
       <<: *logging
 
   hapifhir:
-    restart: always
-    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
+    image: openlmis/hapifhir:2.0.2
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
@@ -190,35 +140,9 @@ services:
     command: ["/wait-for-postgres.sh", "/run.sh"]
     logging:
       <<: *logging
-    
-  diagnostics:
-    restart: always
-    image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    logging:
-      <<: *logging
-
-  one-network-integration-service:
-    image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-    volumes:
-      - 'service-config:/config'
-    depends_on: [ log ]
-    command: [ "/run.sh" ]
-    logging:
-      <<: *logging
 
   log:
-    restart: always
-    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
+    image: openlmis/rsyslog:1
     volumes:
       - 'syslog:/var/log'
     depends_on:
@@ -227,34 +151,11 @@ services:
     logging:
       <<: *logging
 
-  scalyr:
-    image: openlmis/scalyr
-    container_name: scalyr-agent
-    env_file: settings.env
-    volumes:
-      - 'service-config:/config'
-      - '/run/docker.sock:/var/scalyr/docker.sock'
-      - 'syslog:/var/log'
-      - 'nginx-log:/var/log/nginx/log'
-      - 'auth-tomcat-log:/var/log/auth-tomcat'
-    logging:
-      <<: *logging
-
   service-configuration:
     build:
       context: ./config
     volumes:
       - service-config:/config
-    logging:
-      <<: *logging
-
-  ftp:
-    image: hauptmedia/proftpd
-    ports:
-      - "21:21"
-      - "20:20"
-    env_file: settings.env
-    depends_on: [consul]
     logging:
       <<: *logging
 
@@ -272,8 +173,4 @@ volumes:
   consul-template-log:
     external: false
   service-config:
-    external: false
-  referencedata-extension-config:
-    external: false
-  stockmanagement-extension-config:
     external: false
