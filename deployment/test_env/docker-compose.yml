@@ -116,7 +116,7 @@ services:
       <<: *logging
 
   stockmanagement:
-    image: openlmis/stockmanagement:5.1.9
+    image: openlmis/stockmanagement:5.1.9-hotfix.13
     env_file: settings.env
     environment:
       JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback-profiler.xml'
