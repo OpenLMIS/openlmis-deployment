@@ -1,0 +1,130 @@
+context:  "openlmis"
+source: "kafka-ops"
+projects:
+  - name: "referencedata"
+    topics:
+      - name: "commodity_types"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "ideal_stock_amounts"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "facilities"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "facility_operators"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "facility_types"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "geographic_levels"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "geographic_zones"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "lots"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "orderable_identifiers"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "orderables"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "processing_periods"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "processing_schedules"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "program_orderables"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "programs"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "requisition_group_members"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "requisition_group_program_schedules"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "requisition_groups"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "right_assignments"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "rights"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "roles"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "supervisory_nodes"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "supply_lines"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "supported_programs"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "trade_items"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
+      - name: "users"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "lz4"
