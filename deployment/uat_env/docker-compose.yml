@@ -16,9 +16,9 @@ services:
       - "80:80"
     env_file: settings.env
     environment:
-      NGINX_LOG_DIR: '/var/log/nginx'
+      NGINX_LOG_DIR: '/var/log/nginx/log'
     volumes:
-      - 'nginx-log:/var/log/nginx'
+      - 'nginx-log:/var/log/nginx/log'
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
 
@@ -208,8 +208,8 @@ services:
       - 'service-config:/config'
       - '/run/docker.sock:/var/scalyr/docker.sock'
       - 'syslog:/var/log'
+      - 'nginx-log:/var/log/nginx/log'
       - 'auth-tomcat-log:/var/log/auth-tomcat'
-      # - 'nginx-log:/var/log/nginx/log'
 
   service-configuration:
     build:
