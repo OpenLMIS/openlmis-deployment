@@ -15,10 +15,8 @@ services:
     ports:
       - "80:80"
     env_file: settings.env
-    environment:
-      NGINX_LOG_DIR: '/var/log/nginx/log'
     volumes:
-      - 'nginx-log:/var/log/nginx/log'
+      - 'nginx-log:/var/log/nginx'
       - 'consul-template-log:/var/log/consul-template'
     depends_on: [consul]
 
