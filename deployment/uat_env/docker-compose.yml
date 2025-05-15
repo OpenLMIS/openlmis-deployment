@@ -148,17 +148,18 @@ services:
     depends_on: [ log ]
     command: [ "/wait-for-postgres.sh", "/run.sh" ]
 
-  hapifhir:
-    restart: always
-    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
+#  See: https://openlmis.atlassian.net/browse/OLMIS-8157
+#  hapifhir:
+#    restart: always
+#    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
+#    env_file: settings.env
+#    environment:
+#      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
+#      spring_profiles_active: ${spring_profiles_active}
+#    volumes:
+#      - 'service-config:/config'
+#    depends_on: [log]
+#    command: ["/wait-for-postgres.sh", "/run.sh"]
     
   diagnostics:
     restart: always
