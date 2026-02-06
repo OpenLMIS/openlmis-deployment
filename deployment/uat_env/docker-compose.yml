@@ -119,6 +119,8 @@ services:
     image: openlmis/requisition:${OL_REQUISITION_VERSION}
     env_file: settings.env
     environment:
+      # Overrides what is in settings.env, needed because of restart_or_restore.sh
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms1024m
         -Xmx1536m
@@ -144,6 +146,7 @@ services:
     image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms1024m
         -Xmx1536m
@@ -172,6 +175,7 @@ services:
     image: openlmis/auth:${OL_AUTH_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -198,6 +202,7 @@ services:
     image: openlmis/notification:${OL_NOTIFICATION_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -223,6 +228,7 @@ services:
     image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -248,6 +254,7 @@ services:
     image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms512m
         -Xmx512m
@@ -276,6 +283,7 @@ services:
     image: openlmis/report:${OL_REPORT_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms512m
         -Xmx512m
@@ -301,6 +309,7 @@ services:
     image: openlmis/cce:${OL_CCE_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -321,6 +330,7 @@ services:
     image: openlmis/buq:${OL_BUQ_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -341,6 +351,7 @@ services:
     image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -361,6 +372,7 @@ services:
     image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
@@ -381,6 +393,7 @@ services:
     image: openlmis/dhis2-integration:${OL_DHIS2INTEGRATION_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms512m
         -Xmx512m
@@ -401,6 +414,7 @@ services:
     image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
     env_file: settings.env
     environment:
+      spring_profiles_active: ${spring_profiles_active}
       JAVA_OPTS: >-
         -Xms386m
         -Xmx386m
