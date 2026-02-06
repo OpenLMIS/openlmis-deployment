@@ -35,8 +35,8 @@ fi
 echo "Profiles from env: $PROFILES"
 
 echo "Full cleanup (Stopping containers, removing volumes)..."
-/usr/local/bin/docker-compose kill
-/usr/local/bin/docker-compose down -v --remove-orphans
+docker compose kill
+docker compose down -v --remove-orphans
 docker image prune -f
 
 if [ "$KEEP_OR_RESTORE" == "restore" ]; then
@@ -67,7 +67,7 @@ echo "Final Profiles to use: $spring_profiles_active"
 
 echo "Starting services in $ENV_PATH..."
 cd "$ENV_PATH"
-/usr/local/bin/docker-compose pull
-/usr/local/bin/docker-compose up --build --force-recreate -d
+docker compose pull
+docker compose up --build --force-recreate -d
 
 echo "Done."
