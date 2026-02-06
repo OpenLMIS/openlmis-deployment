@@ -30,7 +30,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   log:
     restart: always
@@ -137,7 +137,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   referencedata:
     restart: always
@@ -165,7 +165,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   auth:
     restart: always
@@ -191,7 +191,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   notification:
     restart: always
@@ -216,7 +216,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   fulfillment:
     restart: always
@@ -241,7 +241,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   stockmanagement:
     restart: always
@@ -269,7 +269,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   report:
     restart: always
@@ -294,7 +294,7 @@ services:
       test: "wget --spider http://localhost:8080/actuator/health || exit 1"
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   cce:
     restart: always
