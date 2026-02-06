@@ -2,6 +2,8 @@
 
 set -e
 
+echo "Running CleanDb.sh"
+
 # ensure some environment variables are set
 : "${DATABASE_URL:?DATABASE_URL not set in environment}"
 : "${POSTGRES_USER:?POSTGRES_USER not set in environment}"

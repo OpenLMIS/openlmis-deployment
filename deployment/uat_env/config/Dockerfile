@@ -1,7 +1,11 @@
-FROM alpine:3.11
+FROM alpine:3.21
 
-COPY log/logback.xml /config/log/logback.xml
-COPY scalyr/agent.json /config/scalyr/agent.json
+WORKDIR /stage
 
-CMD /bin/true
+COPY log/ ./log/
+COPY scalyr/ ./scalyr/
 
+RUN find ./log ./scalyr -type d -exec chmod 755 {} + && \
+    find ./log ./scalyr -type f -exec chmod 644 {} +
+
+CMD ["sh", "-c", "cp -a /stage/. /config/"]
