@@ -1,14 +1,70 @@
-version: '2'
 services:
 
+  service-configuration:
+    build:
+      context: ./config
+    volumes:
+      - service-config:/config
+
+  referencedata-extension-config:
+    image: openlmis/one-network-extensions-config:${OL_ONE_NETWORK_INTEGRATION_REFERENCEDATA_EXTENSION_VERSION}
+    volumes:
+      - referencedata-extension-config:/extensions
+
+  stockmanagement-extension-config:
+    image: openlmis/one-network-stockmanagement-extension-config:${OL_ONE_NETWORK_INTEGRATION_STOCKMANAGEMENT_EXTENSION_VERSION}
+    volumes:
+      - stockmanagement-extension-config:/extensions
+
   consul:
-    command: -server -bootstrap
-    image: gliderlabs/consul-server
+    image: hashicorp/consul:${OL_CONSUL_VERSION}
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
     ports:
-      - "8300"
-      - "8400"
+      - "8300:8300"
       - "8500:8500"
-      - "53"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  log:
+    restart: always
+    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
+    volumes:
+      - syslog:/var/log
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+
+  scalyr:
+    restart: always
+    image: openlmis/scalyr
+    container_name: scalyr-agent
+    env_file: settings.env
+    volumes:
+      - service-config:/config
+      - /run/docker.sock:/var/scalyr/docker.sock
+      - syslog:/var/log
+      - nginx-log:/var/log/nginx/log
+      - auth-tomcat-log:/var/log/auth-tomcat
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+
+  redis:
+    image: redis:3.2.12
+    depends_on:
+      consul:
+        condition: service_healthy
 
   nginx:
     image: openlmis/nginx:${OL_NGINX_VERSION}
@@ -18,204 +74,35 @@ services:
     environment:
       NGINX_LOG_DIR: '/var/log/nginx/log'
     volumes:
-      - 'nginx-log:/var/log/nginx/log'
-      - 'consul-template-log:/var/log/consul-template'
-    depends_on: [consul]
+      - nginx-log:/var/log/nginx/log
+      - consul-template-log:/var/log/consul-template
+    depends_on:
+      consul:
+        condition: service_healthy
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
 
   reference-ui:
     image: openlmis/reference-ui:${OL_REFERENCE_UI_VERSION}
     env_file: settings.env
-    depends_on: [consul]
-
-  requisition:
-    restart: always
-    image: openlmis/requisition:${OL_REQUISITION_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx1536m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  referencedata:
-    restart: always
-    image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx1536m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'referencedata-extension-config:/extensions'
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-  
-  referencedata-extension-config:
-    image: openlmis/one-network-extensions-config:${OL_ONE_NETWORK_INTEGRATION_REFERENCEDATA_EXTENSION_VERSION}
-    volumes:
-      - 'referencedata-extension-config:/extensions'
-    
-  stockmanagement-extension-config:
-    image: openlmis/one-network-stockmanagement-extension-config:${OL_ONE_NETWORK_INTEGRATION_STOCKMANAGEMENT_EXTENSION_VERSION}
-    volumes:
-      - 'stockmanagement-extension-config:/extensions'                            
-
-  auth:
-    restart: always
-    image: openlmis/auth:${OL_AUTH_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-      - 'auth-tomcat-log:/var/log/auth-tomcat'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  notification:
-    restart: always
-    image: openlmis/notification:${OL_NOTIFICATION_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  fulfillment:
-    restart: always
-    image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  cce:
-    restart: always
-    image: openlmis/cce:${OL_CCE_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  stockmanagement:
-    restart: always
-    image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'stockmanagement-extension-config:/extensions'                                                
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  report:
-    restart: always
-    image: openlmis/report:${OL_REPORT_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-
-  buq:
-    restart: always
-    image: openlmis/buq:${OL_BUQ_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [ log ]
-    command: [ "/wait-for-postgres.sh", "/run.sh" ]
-
-  hapifhir:
-    restart: always
-    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-    command: ["/wait-for-postgres.sh", "/run.sh"]
-    
-  diagnostics:
-    restart: always
-    image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: ${spring_profiles_active}
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-
-  one-network-integration-service:
-    image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx386m -Dlogging.config=/config/log/logback.xml'
-    volumes:
-      - 'service-config:/config'
-    depends_on: [ log ]
-    command: [ "/run.sh" ]
-
-  dhis2-integration:
-    image: openlmis/dhis2-integration:${OL_DHIS2INTEGRATION_VERSION}
-    env_file: settings.env
-    environment:
-      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
-      spring_profiles_active: demo-data,refresh-db
-    volumes:
-      - 'service-config:/config'
-    depends_on: [log]
-
-  log:
-    restart: always
-    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
-    volumes:
-      - 'syslog:/var/log'
     depends_on:
-      - service-configuration
-      - consul
-
-  scalyr:
-    image: openlmis/scalyr
-    container_name: scalyr-agent
-    env_file: settings.env
-    volumes:
-      - 'service-config:/config'
-      - '/run/docker.sock:/var/scalyr/docker.sock'
-      - 'syslog:/var/log'
-      - 'nginx-log:/var/log/nginx/log'
-      - 'auth-tomcat-log:/var/log/auth-tomcat'
-
-  service-configuration:
-    build:
-      context: ./config
-    volumes:
-      - service-config:/config
+      consul:
+        condition: service_healthy
+      # Services from which data is being taken during logging in
+      referencedata:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
+      notification:
+        condition: service_healthy
+      report:
+        condition: service_healthy
+      fulfillment:
+        condition: service_healthy
+      stockmanagement:
+        condition: service_healthy
 
   ftp:
     image: driesva/proftpd
@@ -223,24 +110,331 @@ services:
       - "21:21"
       - "20:20"
     env_file: settings.env
-    depends_on: [consul]
+    depends_on:
+      consul:
+        condition: service_healthy
 
-  redis:
-    image: redis:3.2.12
-    depends_on: [consul]
+  requisition:
+    restart: always
+    image: openlmis/requisition:${OL_REQUISITION_VERSION}
+    env_file: settings.env
+    environment:
+      # Overrides what is in settings.env, needed because of restart_or_restore.sh
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms1024m
+        -Xmx1536m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  referencedata:
+    restart: always
+    image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms1024m
+        -Xmx1536m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+      - referencedata-extension-config:/extensions
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      referencedata-extension-config:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  auth:
+    restart: always
+    image: openlmis/auth:${OL_AUTH_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+      - auth-tomcat-log:/var/log/auth-tomcat
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  notification:
+    restart: always
+    image: openlmis/notification:${OL_NOTIFICATION_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  fulfillment:
+    restart: always
+    image: openlmis/fulfillment:${OL_FULFILLMENT_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  stockmanagement:
+    restart: always
+    image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms512m
+        -Xmx512m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+      - stockmanagement-extension-config:/extensions
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      stockmanagement-extension-config:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  report:
+    restart: always
+    image: openlmis/report:${OL_REPORT_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms512m
+        -Xmx512m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+    healthcheck:
+      test: "wget --spider http://localhost:8080/actuator/health || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+  cce:
+    restart: always
+    image: openlmis/cce:${OL_CCE_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+
+  buq:
+    restart: always
+    image: openlmis/buq:${OL_BUQ_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+
+  hapifhir:
+    restart: always
+    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+
+  diagnostics:
+    restart: always
+    image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+
+  dhis2-integration:
+    restart: always
+    image: openlmis/dhis2-integration:${OL_DHIS2INTEGRATION_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms512m
+        -Xmx512m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
+
+  one-network-integration-service:
+    restart: always
+    image: openlmis/one-network-integration-service:${OL_ONE_NETWORK_INTEGRATION_VERSION}
+    env_file: settings.env
+    environment:
+      spring_profiles_active: ${spring_profiles_active}
+      JAVA_OPTS: >-
+        -Xms386m
+        -Xmx386m
+        -Djava.security.egd=file:/dev/./urandom
+        -Dlogging.config=/config/log/logback.xml
+    volumes:
+      - service-config:/config:ro
+    depends_on:
+      service-configuration:
+        condition: service_completed_successfully
+      consul:
+        condition: service_healthy
+      log:
+        condition: service_started
 
 volumes:
-  syslog:
-    external: false
-  nginx-log:
-    external: false
-  auth-tomcat-log:
-    external: false
-  consul-template-log:
-    external: false
   service-config:
-    external: false
+  syslog:
+  nginx-log:
+  auth-tomcat-log:
+  consul-template-log:
   referencedata-extension-config:
-    external: false
   stockmanagement-extension-config:
-    external: false                               
