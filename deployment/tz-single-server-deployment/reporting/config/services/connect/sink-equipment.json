@@ -1,0 +1,17 @@
+{
+  "name": "sink-equipment",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "public.kafka_contracts,public.kafka_equipment_categories,public.kafka_equipment_disciplines,public.kafka_equipment_energy_types,public.kafka_equipment_fund_sources,public.kafka_equipment_inventory,public.kafka_equipment_maintenance_request_reasons,public.kafka_equipment_maintenance_requests,public.kafka_equipment_models,public.kafka_equipment_service_logs,public.kafka_equipment_type_programs,public.kafka_equipment_types,public.kafka_equipments,public.kafka_service_types,public.kafka_vendor",
+    "connection.url": "jdbc:postgresql://reporting-db:5432/open_lmis_reporting?stringtype=unspecified",
+    "connection.user": "postgres",
+    "connection.password": "p@ssw0rd",
+    "auto.create": "true",
+    "insert.mode": "upsert",
+    "pk.fields": "id",
+    "pk.mode": "record_key",
+    "delete.enabled": "true"
+  }
+}
+
