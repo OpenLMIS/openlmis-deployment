@@ -228,19 +228,6 @@ services:
     logging:
       <<: *logging
 
-  scalyr:
-    image: openlmis/scalyr
-    container_name: scalyr-agent
-    env_file: settings.env
-    volumes:
-      - 'service-config:/config'
-      - '/run/docker.sock:/var/scalyr/docker.sock'
-      - 'syslog:/var/log'
-      - 'nginx-log:/var/log/nginx/log'
-      - 'auth-tomcat-log:/var/log/auth-tomcat'
-    logging:
-      <<: *logging
-
   service-configuration:
     build:
       context: ./config
