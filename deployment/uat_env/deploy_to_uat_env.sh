@@ -201,8 +201,9 @@ SOURCE_PG_PASSWORD=$(get_env SOURCE_PG_PASSWORD)
 SOURCE_PG_SSLMODE=$(get_env SOURCE_PG_SSLMODE)
 ALLOWLIST=$(get_env SOURCE_PG_TABLE_ALLOWLIST)
 
+# No -i: it would drain the stdin that feeds this script (bash -s).
 psql_rds() {
-  docker run --rm -i -e PGPASSWORD="$SOURCE_PG_PASSWORD" postgres:14-alpine \
+  docker run --rm -v "$REPORTING_REMOTE_PATH/.deploy:/sql:ro" -e PGPASSWORD="$SOURCE_PG_PASSWORD" postgres:14-alpine \
     psql "host=$SOURCE_PG_HOST port=${SOURCE_PG_PORT:-5432} dbname=$SOURCE_PG_DB user=$SOURCE_PG_USER sslmode=${SOURCE_PG_SSLMODE:-require}" \
     -v ON_ERROR_STOP=1 "$@"
 }
@@ -210,24 +211,38 @@ psql_rds() {
 EXPECTED=$(echo "$ALLOWLIST" | tr ',' '\n' | grep -c .)
 IN_LIST=$(echo "$ALLOWLIST" | tr ',' '\n' | sed "s/\([^.]*\)\.\(.*\)/('\1','\2')/" | paste -sd, -)
 
+# On restore, table EXISTENCE is not enough: the pre-restore tables still
+# exist while Flyway is only starting its clean, so an early apply gets
+# silently undone when the tables are recreated. Apply, then confirm the
+# publication membership HOLDS across a stability window, re-applying until
+# it does. On keep builds the single apply is final (no Flyway churn).
+PUB_EXPECTED=$(( EXPECTED + 1 ))   # allowlist + public.debezium_signal
 echo "Waiting for the $EXPECTED allowlisted source tables to exist on RDS..."
-DEADLINE=$(( $(date +%s) + 1800 ))
+DEADLINE=$(( $(date +%s) + 2700 ))
 while :; do
   COUNT=$(psql_rds -tA -c "SELECT count(*) FROM information_schema.tables WHERE (table_schema, table_name) IN ($IN_LIST);" || echo 0)
   if [ "$COUNT" = "$EXPECTED" ]; then
-    echo "All $EXPECTED source tables present."
-    break
+    echo "All $EXPECTED source tables present — applying CDC objects (heartbeat, signal, publication)..."
+    psql_rds -f /sql/reporting-stack-cdc.sql
+    if [ "${KEEP_OR_RESTORE:-keep}" != "restore" ]; then
+      break
+    fi
+    sleep 60
+    PUB_COUNT=$(psql_rds -tA -c "SELECT count(*) FROM pg_publication_tables WHERE pubname='dbz_publication';" || echo 0)
+    if [ "$PUB_COUNT" = "$PUB_EXPECTED" ]; then
+      echo "Publication membership stable at $PUB_COUNT tables."
+      break
+    fi
+    echo "  publication dropped to $PUB_COUNT/$PUB_EXPECTED (Flyway recreating tables) — re-applying..."
+  else
+    echo "  $COUNT/$EXPECTED tables present — retrying in 30s..."
+    sleep 30
   fi
   if [ "$(date +%s)" -ge "$DEADLINE" ]; then
-    echo "ERROR: timed out waiting for source tables ($COUNT/$EXPECTED present)." >&2
+    echo "ERROR: timed out waiting for stable CDC objects ($COUNT/$EXPECTED tables)." >&2
     exit 1
   fi
-  echo "  $COUNT/$EXPECTED tables present — retrying in 30s..."
-  sleep 30
 done
-
-echo "Applying idempotent CDC objects (heartbeat, signal, publication) to RDS..."
-psql_rds < .deploy/reporting-stack-cdc.sql
 
 # Git-mode packages: clone core (+ extensions if configured) to .packages/ so
 # the connector and Superset importers (run by `make setup`) pick them up. dbt
@@ -235,6 +250,12 @@ psql_rds < .deploy/reporting-stack-cdc.sql
 # (ANALYTICS_CORE_GIT_URL unset).
 make package-fetch
 make setup
+
+# 'make reset' wiped ClickHouse on restore — rebuild the curated marts now
+# instead of leaving dashboards empty until the hourly Airflow DAG.
+if [ "${KEEP_OR_RESTORE:-keep}" = "restore" ]; then
+  make initial-dbt-build
+fi
 REMOTE
 
 echo "=== Done ==="
