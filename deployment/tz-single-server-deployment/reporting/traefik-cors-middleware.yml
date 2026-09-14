@@ -1,0 +1,8 @@
+middlewares:
+  web-cors:
+    headers:
+      accessControlAllowOrigin: "https://uat.3.elmis.co.tz"
+      accessControlAllowMethods: "GET,POST,PUT,DELETE,OPTIONS"
+      accessControlMaxAge: 1000
+      accessControlAllowCredentials: true
+      accessControlAllowHeaders: "Content-Type"

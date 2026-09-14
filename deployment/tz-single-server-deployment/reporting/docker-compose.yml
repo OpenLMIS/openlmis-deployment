@@ -1,0 +1,258 @@
+version: "3.3"
+
+services:
+
+  config-container:
+    command: /init.sh
+    env_file: settings.env
+    build:
+      context: ./config
+    volumes:
+      - config-volume:/config
+
+  scalyr:
+    image: openlmis/scalyr
+    env_file: settings.env
+    volumes:
+      - config-volume:/config
+      - ${SCALYR_DOCKER_SOCK}:/var/scalyr/docker.sock
+      - syslog:/var/log/reporting
+
+  log:
+    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
+    volumes:
+      - syslog:/var/log
+    ports:
+      - "${SYSLOG_UDP_PORT}:514/udp"
+
+  reporting-nginx:
+    image: openlmis/nginx:${OL_NGINX_VERSION}
+    ports:
+      - "9980:80"
+      - "9443:443"
+    env_file: settings.env
+    environment:
+      NGINX_LOG_DIR: '/var/log/nginx/log'
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+    volumes:
+      - config-volume:/config
+    entrypoint: >
+      /bin/sh -c "/config/nginx/init.sh"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [log, config-container]
+    networks:
+      - public_network
+
+  db-service-configuration:
+    build:
+      context: ./db
+    volumes:
+      - db-config-volume:/docker-entrypoint-initdb.d
+    networks:
+      - public_network
+
+  reporting-db:
+    image: openlmis/postgres:${OL_POSTGRES_VERSION}
+    env_file: settings.env
+    volumes:
+      - db-config-volume:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [log, db-service-configuration]
+    networks:
+      - public_network
+
+  cron-config:
+    build:
+      context: ./cron
+    volumes:
+      - cron-periodic-volume:/cron/periodic
+    networks:
+      - public_network
+
+  cron:
+    image: openlmis/dev:5.1
+    env_file: settings.env
+    entrypoint: ["echo", "cron disabled"]
+    command: crond -f -l 8
+    volumes:
+      - cron-periodic-volume:/etc/periodic/:ro
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [log, cron-config]
+    networks:
+      - public_network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:${OL_CONFLUENT_VERSION}
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=32181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_SYNC_LIMIT=2
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [log]
+    networks:
+      - public_network
+
+
+  kafka:
+    image: confluentinc/cp-kafka:${OL_CONFLUENT_VERSION}
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:32181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092
+      - KAFKA_BROKER_ID=2
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_LOG_CLEANER_ENABLE=true
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+    hostname: kafka
+    volumes:
+      - config-volume:/config
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [log, config-container, zookeeper]
+    networks:
+      - public_network
+
+  kafka-ops:
+    image: purbon/kafka-topology-builder:${OL_KAFKA_TOPOLOGY_BUILDER_VERSION}
+    environment:
+      - KAFKA_BROKER=kafka:29092
+    volumes:
+      - config-volume:/config
+    working_dir: /config/kafka-ops
+    entrypoint: >
+      bash -c "./run.sh"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [kafka]
+    networks:
+      - public_network
+
+  connect:
+    image: openlmis/debezium-connect
+    ports:
+      - 8083:8083
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:29092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - HOST_NAME=0.0.0.0
+      - OFFSET_FLUSH_TIMEOUT_MS=30000
+      - OFFSET_FLUSH_INTERVAL_MS=15000
+      - HEAP_OPTS=-Xms256M -Xmx1G
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [kafka]
+    networks:
+      - public_network
+
+  connect-reg:
+    image: openlmis/toolbelt
+    env_file: settings.env
+    volumes:
+      - config-volume:/config
+    entrypoint: >
+      bash -c "/config/connect/register.sh"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [connect]
+    networks:
+      - public_network
+
+  kafka-rest:
+    image: confluentinc/cp-kafka-rest:${OL_CONFLUENT_VERSION}
+    environment:
+      - KAFKA_REST_ZOOKEEPER_CONNECT=zookeeper:32181
+      - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka:29092
+      - KAFKA_REST_HOST_NAME=kafka-rest
+      - KAFKA_REST_LISTENERS=http://0.0.0.0:8082
+      - KAFKA_REST_CONSUMER_REQUEST_TIMEOUT_MS=30000
+      - KAFKA_REST_ACCESS_CONTROL_ALLOW_METHODS=GET,POST,PUT,DELETE,OPTIONS
+      - KAFKA_REST_ACCESS_CONTROL_ALLOW_ORIGIN=*
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [kafka]
+    networks:
+      - public_network
+
+  kafka-topics-ui:
+    image: landoop/kafka-topics-ui
+    hostname: topics_ui
+    ports:
+      - 8000:8000
+    environment:
+      - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
+      - PROXY=true
+      - MAX_BYTES=500000
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [kafka-rest]
+    networks:
+      - public_network
+
+  superset:
+    build:
+      context: ./superset
+      args:
+        SUPERSET_VERSION: ${OL_SUPERSET_VERSION}
+        SUPERSET_PATCHUP_VERSION: ${OL_SUPERSET_PATCHUP_VERSION}
+    environment:
+      SUPERSET_CONFIG_PATH: /etc/superset/superset_config.py
+    ports:
+      - "8088:8088"
+    volumes:
+      - config-volume:/config
+    command: >
+      bash -c "cp -r /config/superset /etc/
+      && sh /etc/superset/init.sh"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:${SYSLOG_UDP_PORT}"
+    depends_on: [reporting-db, config-container]
+    env_file: settings.env
+    networks:
+      - public_network
+
+volumes:
+  syslog:
+    external: false
+  config-volume:
+    external: false
+  db-config-volume:
+    external: false
+  db-data:
+    external: false
+  cron-periodic-volume:
+    external: false
+
+networks:
+  public_network:
+    external: true

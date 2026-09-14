@@ -1,0 +1,49 @@
+# HTTP Server Block - Redirect to HTTPS
+server {
+    listen 80;
+    server_name training.tz.elmis-dev.org;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS Server Block
+server {
+    listen 443 ssl;
+    server_name training.tz.elmis-dev.org;
+
+    # SSL Configuration
+    ssl_certificate /etc/letsencrypt/live/training.tz.elmis-dev.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/training.tz.elmis-dev.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;  # Recommended SSL settings from Let's Encrypt
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;   # DH parameters for stronger encryption
+    add_header Content-Security-Policy "frame-ancestors https://training.tz.elmis-dev.org";
+    # Security Headers
+    #add_header Content-Security-Policy "default-src 'self'; img-src 'self' https://www.google-analytics.com data:; script-src 'self' https://www.google-analytics.com; style-src 'self' 'unsafe-inline';";
+    #add_header X-Frame-Options "SAMEORIGIN";
+    #add_header X-Content-Type-Options "nosniff";
+    #add_header X-XSS-Protection "1; mode=block";
+    #add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";  # Enable HSTS
+
+    # Proxy Settings
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    # Root Location - Serve your primary application
+    location / {
+        proxy_pass http://localhost:8090;  # Update with your actual backend service
+    }
+
+    # Error Pages
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        internal;
+    }
+}
