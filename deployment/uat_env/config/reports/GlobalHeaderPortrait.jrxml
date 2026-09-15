@@ -52,13 +52,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[str($P{headerSubtitle}) != null ? str($P{headerSubtitle}) : $P{headerSubtitle}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="38" width="160" height="12" uuid="8224aaaa-0000-4000-8000-000000000001"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[QA-8224 HEADER TEMPLATE v2]]></text>
-			</staticText>
 		</band>
 	</pageHeader>
 </jasperReport>
