@@ -36,6 +36,15 @@ services:
     logging:
       <<: *logging
 
+  openlmis-ui:
+    image: openlmis/openlmis-ui:${OL_UI_VERSION}
+    env_file: settings.env
+    environment:
+      BASE_PATH: /v2
+    depends_on: [consul]
+    logging:
+      <<: *logging
+
   requisition:
     restart: always
     image: openlmis/requisition:${OL_REQUISITION_VERSION}
