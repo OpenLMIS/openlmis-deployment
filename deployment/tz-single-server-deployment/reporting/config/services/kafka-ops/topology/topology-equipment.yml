@@ -1,0 +1,80 @@
+context:  "openlmis"
+source: "kafka-ops"
+projects:
+  - name: "equipment"
+    topics:
+      - name: "equipments"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "contracts"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_categories"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_disciplines"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_energy_types"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_fund_sources"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_inventory"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_maintenance_request_reasons"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_maintenance_requests"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_models"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_service_logs"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_type_programs"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "equipment_types"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "service_types"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "vendor"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"

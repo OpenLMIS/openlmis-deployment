@@ -1,0 +1,382 @@
+version: '3.5'
+services:
+
+  consul:
+    command: -server -bootstrap
+    image: gliderlabs/consul-server
+    ports:
+      - "8300"
+      - "8400"
+      - "8500:8500"
+      - "53"
+    networks:
+      - public_network
+
+  nginx:
+    image: openlmis/nginx:${OL_NGINX_VERSION}
+    ports:
+      - "8090:80"
+    env_file: settings.env
+    environment:
+      NGINX_LOG_DIR: '/var/log/nginx/log'
+    volumes:
+      - 'nginx-log:/var/log/nginx/log'
+      - 'consul-template-log:/var/log/consul-template'
+    depends_on: [consul]
+    networks:
+      - public_network
+
+  tanzania-ui:
+    restart: always
+    image: openlmistz/tanzania-ui:${TZ_UI_VERSION}
+    env_file: settings.env
+    depends_on: [consul]
+    networks:
+      - public_network
+
+  requisition:
+    restart: always
+    image: openlmis/requisition:${OL_REQUISITION_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '1.3G'
+    cpus: 2
+    networks:
+      - public_network
+
+  referencedata:
+    restart: always
+    image: openlmis/referencedata:${OL_REFERENCEDATA_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '1.3G'
+    cpus: 2
+    networks:
+      - public_network
+
+  auth:
+    restart: always
+    image: openlmis/auth:${OL_AUTH_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+      - 'auth-tomcat-log:/var/log/auth-tomcat'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  notification:
+    restart: always
+    image: openlmis/notification:${OL_NOTIFICATION_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  fulfillment:
+    restart: always
+    image: openlmistz/tz-openlmis-fulfillment:${OL_FULFILLMENT_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log, db]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  budget:
+    restart: always
+    image: openlmistz/budget:latest
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  equipment:
+    restart: always
+    image: openlmistz/equipment:${OL_EQUIPMENT_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log, cce, auth, nginx]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  common:
+    restart: always
+    image: openlmistz/common:${TZ_COMMON_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx1024m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: [ "/wait-for-postgres.sh", "/run.sh" ]
+    mem_limit: '1.3G'
+    cpus: 2
+    networks:
+      - public_network
+
+  cce:
+    restart: always
+    image: openlmis/cce:${OL_CCE_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  pcmt-integration:
+    image: openlmistz/pcmt-integration:1.0.1-SNAPSHOT
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+    links:
+      - db
+      - log
+    volumes:
+      - 'service-config:/config'
+    depends_on: [ log ]
+    ports:
+      - "8080"
+    env_file: settings.env
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  stockmanagement:
+    restart: always
+    image: openlmis/stockmanagement:${OL_STOCKMANAGEMENT_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+    
+  buq:
+    restart: always
+    image: openlmistz/buq:${OL_BUQ_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [ log ]
+    command: [ "/wait-for-postgres.sh", "/run.sh" ]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+ 
+  report:
+    restart: always
+    image: openlmis/report:${OL_REPORT_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml -Dflyway.locations=classpath:db/migration,filesystem:/demo-data'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    command: ["/wait-for-postgres.sh", "/run.sh"]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  hapifhir:
+    restart: always
+    image: openlmis/hapifhir:${OL_HAPIFHIR_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [ log ]
+    command: [ "/wait-for-postgres.sh", "/run.sh" ]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  diagnostics:
+    restart: always
+    image: openlmis/diagnostics:${OL_DIAGNOSTICS_VERSION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  dhis2-integration:
+    image: openlmis/dhis2-integration:${OL_DHIS2_INTEGRATION}
+    env_file: settings.env
+    environment:
+      JAVA_OPTS: '-server -Xmx512m -Dlogging.config=/config/log/logback.xml'
+      spring_profiles_active: ${spring_profiles_active}
+    volumes:
+      - 'service-config:/config'
+    depends_on: [log]
+    mem_limit: '0.7G'
+    cpus: 2
+    networks:
+      - public_network
+
+  db:
+    restart: always
+    image: openlmis/postgres:${OL_POSTGRES_VERSION}
+    command: postgres -c 'max_connections=1000'
+    env_file: settings.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p@ssw0rd
+    ports:
+      - 5432:5432
+    networks:
+      public_network:
+        aliases:
+          - olmis-db
+    volumes:
+      - 'pg-data-prod:/var/lib/postgresql/data'
+    depends_on: [consul]
+    mem_limit: '1.3G'
+    cpus: 4
+
+  log:
+    restart: always
+    image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
+    volumes:
+      - 'syslog:/var/log'
+    depends_on:
+      - service-configuration
+      - consul
+    networks:
+      - public_network
+
+  scalyr:
+    image: openlmis/scalyr
+    container_name: scalyr-agent
+    env_file: settings.env
+    volumes:
+      - 'service-config:/config'
+      - '/run/docker.sock:/var/scalyr/docker.sock'
+      - 'syslog:/var/log'
+      - 'nginx-log:/var/log/nginx/log'
+      - 'auth-tomcat-log:/var/log/auth-tomcat'
+    networks:
+      - public_network
+
+  service-configuration:
+    build:
+      context: ./config
+    volumes:
+      - service-config:/config
+    networks:
+      - public_network
+
+  ftp:
+    image: driesva/proftpd
+    ports:
+      - "${OL_FTP_PORT_21:-21}:21"
+      - "${OL_FTP_PORT_20:-20}:20"
+      - "21100-21110:21100-21110"
+    env_file: settings.env
+    depends_on: [consul]
+    networks:
+      - public_network
+
+  redis:
+    image: redis:3.2.12
+    depends_on: [consul]
+    networks:
+      - public_network
+
+volumes:
+  syslog:
+    external: false
+  nginx-log:
+    external: false
+  auth-tomcat-log:
+    external: false
+  consul-template-log:
+    external: false
+  service-config:
+    external: false
+  pg-data-tz:
+    external: true
+  pg-data-prod:
+    external: true
+  fulfillment-extensions:
+    external: false   
+
+networks:
+  public_network:
+    external: true

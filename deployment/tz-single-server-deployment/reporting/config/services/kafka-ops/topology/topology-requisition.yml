@@ -1,0 +1,30 @@
+context:  "openlmis"
+source: "kafka-ops"
+projects:
+  - name: "requisition"
+    topics:
+      - name: "requisitions"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "requisition_line_items"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "status_changes"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "stock_adjustments"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"
+      - name: "stock_adjustment_reasons"
+        config:
+          replication.factor: 1
+          num.partitions: 1
+          compression.type: "snappy"

@@ -1,0 +1,42 @@
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name report.training.tz.elmis-dev.org;
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS Configuration
+server {
+    listen 443 ssl;
+    server_name report.training.tz.elmis-dev.org;
+
+    ssl_certificate /etc/letsencrypt/live/report.training.tz.elmis-dev.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/report.training.tz.elmis-dev.org/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:8088;  # Ensure Superset is running on this port
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    add_header Content-Security-Policy "frame-ancestors https://training.tz.elmis-dev.org";
+    #add_header X-Frame-Options "ALLOW-FROM https://training.tz.elmis-dev.org";
+    #add_header Content-Security-Policy "default-src 'self'; img-src 'self' https://www.google-analytics.com data:; script-src 'self' https://www.google-analytics.com; style-src 'self' 'unsafe-inline';";
+
+    # Optional: Serve static files directly for better performance
+    #location /static/ {
+    #    alias /path/to/superset/static/;
+    #}
+
+    # Optional: Handle WebSocket connections
+    location /websocket {
+        proxy_pass http://localhost:8088;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
