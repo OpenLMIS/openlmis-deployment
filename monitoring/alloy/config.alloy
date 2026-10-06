@@ -1,0 +1,217 @@
+// Host agent: scrape docker containers + host/container metrics, tail logs,
+// push to the central /ingest/* endpoints. Env-configured. See README.md.
+// Loaded as a directory: any other *.alloy file next to this one is merged in
+// and can forward to the components below (README.md § Site-specific config).
+
+// metrics: app containers (docker SD)
+
+discovery.docker "app" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "app" {
+  targets = discovery.docker.app.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_label_monitoring_scrape"]
+    regex         = "true"
+    action        = "keep"
+  }
+  rule {
+    source_labels = ["__meta_docker_network_ip", "__meta_docker_container_label_monitoring_port"]
+    separator     = ":"
+    target_label  = "__address__"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_monitoring_path"]
+    regex         = "(.+)"
+    target_label  = "__metrics_path__"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_monitoring_service"]
+    target_label  = "service"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "instance"
+  }
+}
+
+// `job` is the package's collector-kind contract — app / node / cadvisor /
+// agent — and alert rules key on it. Service identity lives in `service`, not
+// here. Never let it default to the Alloy component name: rules would then be
+// pinned to this file's internal structure. See docs/metrics.md.
+prometheus.scrape "app" {
+  targets         = discovery.relabel.app.output
+  forward_to      = [prometheus.relabel.app.receiver]
+  job_name        = "app"
+  scrape_interval = "15s"
+}
+
+// Apps must not carry the deployment identity themselves: remote_write
+// external_labels never overwrite a label already on a series, so an app-side
+// `environment="production"` (a Micrometer common tag) would bypass the enum,
+// the Alertmanager routing and every dashboard filter. Drop them here; the
+// agent's values are re-attached by external_labels below. Only the app scrape
+// needs this — node / cadvisor / agent series cannot carry them.
+prometheus.relabel "app" {
+  forward_to = [prometheus.remote_write.central.receiver]
+
+  rule {
+    action = "labeldrop"
+    regex  = "^(app|deployment|environment|host)$"
+  }
+}
+
+// metrics: host + containers
+//
+// prometheus.exporter.* components preset `job` on their own targets
+// (`integrations/unix`, `integrations/cadvisor`), and Prometheus only applies
+// a scrape's job_name when the target's job label is empty — so the kind label
+// has to be rewritten here, not on the scrape.
+
+prometheus.exporter.unix "host" {
+  rootfs_path = "/host/root"
+  procfs_path = "/host/proc"
+  sysfs_path  = "/host/sys"
+}
+
+discovery.relabel "host" {
+  targets = prometheus.exporter.unix.host.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "node"
+  }
+}
+
+prometheus.scrape "host" {
+  targets    = discovery.relabel.host.output
+  forward_to = [prometheus.remote_write.central.receiver]
+}
+
+prometheus.exporter.cadvisor "containers" {
+  docker_host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "cadvisor" {
+  targets = prometheus.exporter.cadvisor.containers.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "cadvisor"
+  }
+}
+
+prometheus.scrape "cadvisor" {
+  targets    = discovery.relabel.cadvisor.output
+  forward_to = [prometheus.remote_write.central.receiver]
+}
+
+// metrics: the agent itself
+//
+// The heartbeat AgentAbsent keys on. In a push model a dead host cannot report
+// itself down — its series simply stop arriving — so this is what makes the
+// absence detectable centrally.
+
+prometheus.exporter.self "agent" {}
+
+discovery.relabel "agent" {
+  targets = prometheus.exporter.self.agent.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "agent"
+  }
+}
+
+prometheus.scrape "agent" {
+  targets    = discovery.relabel.agent.output
+  forward_to = [prometheus.remote_write.central.receiver]
+}
+
+prometheus.remote_write "central" {
+  endpoint {
+    url          = sys.env("INGEST_METRICS_URL")
+    bearer_token = sys.env("INGEST_TOKEN")
+  }
+  external_labels = {
+    app         = sys.env("APP"),
+    deployment  = sys.env("DEPLOYMENT"),
+    environment = sys.env("ENVIRONMENT"),
+    host        = sys.env("TARGET_NAME"),
+  }
+}
+
+// logs
+
+discovery.docker "logs" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "logs" {
+  targets = discovery.docker.logs.targets
+
+  // drop the agent's own logs (feedback loop)
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    regex         = "soldevelo-monitoring-agents"
+    action        = "drop"
+  }
+  // LOG_DROP_SERVICES: optional regex of compose service names whose logs never
+  // leave the host (a noisy sidecar, a second log shipper). Unset drops nothing.
+  // The default must not match the empty string, or every container without a
+  // compose service label is dropped — "a^" cannot match anything ("$^" can).
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex         = coalesce(sys.env("LOG_DROP_SERVICES"), "a^")
+    action        = "drop"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "container"
+  }
+  // Fall back to the container's own name. Containers started outside compose
+  // (`docker run`, one-off jobs) have no compose service label; Loki drops empty
+  // labels, so without this they all share one stream and one noisy container
+  // spends the per-stream rate limit for all of them. Matches only while
+  // `container` is still empty.
+  rule {
+    source_labels = ["container", "__meta_docker_container_name"]
+    regex         = ";/?(.+)"
+    target_label  = "container"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_monitoring_service"]
+    target_label  = "service"
+  }
+  rule {
+    target_label = "app"
+    replacement  = sys.env("APP")
+  }
+  rule {
+    target_label = "deployment"
+    replacement  = sys.env("DEPLOYMENT")
+  }
+  rule {
+    target_label = "environment"
+    replacement  = sys.env("ENVIRONMENT")
+  }
+  rule {
+    target_label = "host"
+    replacement  = sys.env("TARGET_NAME")
+  }
+}
+
+loki.source.docker "containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.logs.output
+  forward_to = [loki.write.central.receiver]
+}
+
+loki.write "central" {
+  endpoint {
+    url          = sys.env("INGEST_LOGS_URL")
+    bearer_token = sys.env("INGEST_TOKEN")
+  }
+}

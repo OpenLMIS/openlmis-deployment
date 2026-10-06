@@ -1,0 +1,60 @@
+# One Alloy agent per environment host (own compose project): discover, collect,
+# push to the central soldevelo-monitoring stack. See README.md.
+
+x-logging:
+  &default-logging
+  driver: json-file
+  options:
+    max-size: "50m"
+    max-file: "7"
+
+services:
+  alloy:
+    # Built by deploy_alloy.sh (config baked in: the daemon is remote, so
+    # nothing can be bind-mounted from here).
+    image: soldevelo-monitoring-alloy:${ALLOY_VERSION}
+    restart: unless-stopped
+    # Pins `instance` on the agent's own exporter targets; without it every
+    # rebuild orphans the series and AgentAbsent fires.
+    hostname: ${TARGET_NAME}
+    command:
+      - run
+      - /etc/alloy               # config.alloy + openlmis.alloy, merged
+      - --server.http.listen-addr=127.0.0.1:12345
+      - --storage.path=/var/lib/alloy
+    environment:
+      APP: ${APP}
+      DEPLOYMENT: ${DEPLOYMENT}
+      ENVIRONMENT: ${ENVIRONMENT}
+      TARGET_NAME: ${TARGET_NAME}
+      INGEST_METRICS_URL: ${INGEST_METRICS_URL}
+      INGEST_LOGS_URL: ${INGEST_LOGS_URL}
+      INGEST_TOKEN: ${INGEST_TOKEN}
+      LOG_DROP_SERVICES: ${LOG_DROP_SERVICES:-}
+    # Host network, not the app network: the app deploy runs
+    # `docker compose down` under `set -e`, and a foreign container on
+    # <env>_default keeps that network from being removed. From the host
+    # namespace the container IPs on every bridge are reachable anyway.
+    network_mode: host
+    privileged: true          # cAdvisor cgroup/device access
+    pid: host                 # unix exporter sees host processes
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # unix (node) exporter
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro,rslave
+      # cAdvisor
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - alloy-data:/var/lib/alloy
+    devices:
+      - /dev/kmsg
+    logging: *default-logging
+
+volumes:
+  alloy-data:
