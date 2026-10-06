@@ -56,5 +56,20 @@ services:
       - /dev/kmsg
     logging: *default-logging
 
+  # postgres_exporter → the env's database (read-only pg_monitor role). Off
+  # unless COMPOSE_PROFILES includes `postgres`. On this project's own bridge
+  # network; Alloy (host network) reaches it by container IP like the apps.
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.20.1
+    profiles: [postgres]
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: ${PG_EXPORTER_DSN:-}
+    labels:
+      monitoring.scrape: "true"
+      monitoring.port: "9187"
+      monitoring.service: "postgres"
+    logging: *default-logging
+
 volumes:
   alloy-data:

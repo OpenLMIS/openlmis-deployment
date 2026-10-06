@@ -36,6 +36,16 @@ The agent scrapes containers labelled `monitoring.scrape: "true"`, at
 `deployment/uat_env/docker-compose.yml`). Labels apply when the app containers
 are recreated, i.e. on the next app deploy.
 
+## PostgreSQL
+
+`postgres-exporter` runs only with `COMPOSE_PROFILES=postgres` and
+`PG_EXPORTER_DSN` in `<env>-alloy.env`. It logs in as a read-only role:
+
+```sql
+CREATE ROLE olmis_monitoring LOGIN PASSWORD '...';
+GRANT pg_monitor TO olmis_monitoring;
+```
+
 ## Notes
 
 - `network_mode: host`, not the app network: the app deploy's
