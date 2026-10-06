@@ -1,0 +1,42 @@
+// OpenLMIS additions to the package agent. Merged with config.alloy
+// (the package's, vendored at PACKAGE_VERSION — never edit it here); both are
+// baked into the image and loaded as one config from /etc/alloy.
+
+// logs: nginx access/error
+//
+// The reverse proxy writes to files in the `nginx-log` volume (NGINX_LOG_DIR) and
+// nothing to stdout, so the package's docker log source never sees it. Read
+// through the /var/lib/docker mount that is already there for cAdvisor.
+// `filename` (set by loki.source.file) separates access.log from error.log.
+// The glob matches every env's volume (`uat_env_nginx-log`, `test_env_nginx-log`, …).
+
+local.file_match "nginx" {
+  path_targets = [{
+    __path__    = "/var/lib/docker/volumes/*_nginx-log/_data/*.log",
+    container   = "nginx",
+    service     = "nginx",
+    app         = sys.env("APP"),
+    deployment  = sys.env("DEPLOYMENT"),
+    environment = sys.env("ENVIRONMENT"),
+    host        = sys.env("TARGET_NAME"),
+  }]
+}
+
+loki.source.file "nginx" {
+  targets    = local.file_match.nginx.targets
+  forward_to = [loki.process.nginx.receiver]
+  // access.log is not rotated; without this the first start backfills every
+  // historical line.
+  tail_from_end = true
+}
+
+loki.process "nginx" {
+  forward_to = [loki.write.central.receiver]
+
+  // Load balancer health checks are no signal; availability is covered by the
+  // blackbox probes.
+  stage.drop {
+    expression          = "ELB-HealthChecker"
+    drop_counter_reason = "nginx_health_check"
+  }
+}
