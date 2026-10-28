@@ -8,7 +8,7 @@ USE_ENV_MSG="Will use whatever is in the env file."
 
 # Bring it down
 /usr/local/bin/docker-compose kill
-/usr/local/bin/docker-compose down -v
+/usr/local/bin/docker-compose down -v --remove-orphans
 docker rm $(docker ps -aq)
 docker rmi $(docker images -aq)
 
