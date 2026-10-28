@@ -9,48 +9,12 @@
         <includeCallerData>false</includeCallerData>
     </appender>
 
-    <logger name="org.openlmis.auth" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
+    <!--    <logger name="org.openlmis" level="DEBUG" additivity="false">-->
+    <!--        <appender-ref ref="ASYNC_CONSOLE"/>-->
+    <!--    </logger>-->
 
-    <logger name="org.openlmis.cce" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.fulfillment" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.notification" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.referencedata" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.report" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.requisition" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.stockmanagement" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.buq" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <logger name="org.openlmis.onenetwork.integration" level="DEBUG" additivity="false">
-        <appender-ref ref="ASYNC_CONSOLE"/>
-    </logger>
-
-    <!-- Define the root logger log level -->
     <root level="INFO">
         <appender-ref ref="ASYNC_CONSOLE"/>
     </root>
+
 </configuration>
